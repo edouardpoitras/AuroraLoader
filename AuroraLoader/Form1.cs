@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -113,19 +114,38 @@ namespace AuroraLoader
 
         private void LoadVersion()
         {
-            Version = "Unknown";
+            Version = null;
             var checksum = Versions.GetAuroraChecksum();
             LabelChecksum.Text = "Aurora checksum: " + checksum;
             LabelVersion.Text = "Aurora version: Unknown";
 
             var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "versions.txt");
             var lines = File.ReadAllLines(file);
+
             for (int i = 0; i < lines.Length; i += 2)
             {
                 if (checksum.Equals(lines[i + 1]))
                 {
                     Version = lines[i];
                     LabelVersion.Text = "Aurora version: " + Version;
+                }
+            }
+
+            if (Version == null)
+            {
+                using (var client = new WebClient())
+                {
+                    var str = client.DownloadString("https://raw.githubusercontent.com/01010100b/AuroraLoader/master/AuroraLoader/versions.txt");
+                    lines = str.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+
+                    for (int i = 0; i < lines.Length; i += 2)
+                    {
+                        if (checksum.Equals(lines[i + 1]))
+                        {
+                            Version = lines[i];
+                            LabelVersion.Text = "Aurora version: " + Version;
+                        }
+                    }
                 }
             }
         }

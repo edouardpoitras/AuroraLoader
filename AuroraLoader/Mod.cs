@@ -18,6 +18,11 @@ namespace AuroraLoader
         public ModStatus Status { get; set; } = ModStatus.POWERUSER;
         public string Exe { get; set; } = null;
 
+        public bool WorksForVersion(string version)
+        {
+            return version.Equals(AuroraVersion);
+        }
+
         public override string ToString()
         {
             var sb = new StringBuilder();

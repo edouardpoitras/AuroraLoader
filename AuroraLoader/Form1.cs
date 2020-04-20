@@ -50,17 +50,19 @@ namespace AuroraLoader
         private void Form1_Load(object sender, EventArgs e)
         {
             LoadVersion();
-
-            
-
-            
             LoadMods();
             UpdateLists();
         }
 
         private void ButtonLaunch_Click(object sender, EventArgs e)
         {
+            ButtonLaunch.Enabled = false;
+            ButtonLaunch.Refresh();
 
+            var exe = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ApplyExeMod(ComboExe.SelectedItem as Mod));
+            Process.Start(new ProcessStartInfo(exe));
+
+            Application.Exit();
         }
 
         private void UpdateLists()
@@ -87,7 +89,7 @@ namespace AuroraLoader
                 AvailableExeMods.AddRange(Mods.Where(m => m.Status == Mod.ModStatus.POWERUSER));
             }
 
-            AvailableExeMods.RemoveAll(m => m.Name.Equals("Base Game"));
+            AvailableExeMods.RemoveAll(m => m.Name.Equals("Base Game") || m.Exe == null);
             AvailableExeMods.Sort((a, b) => a.Name.CompareTo(b.Name));
             AvailableExeMods.Insert(0, Mods.Where(m => m.Name.Equals("Base Game")).FirstOrDefault());
 
@@ -111,6 +113,7 @@ namespace AuroraLoader
 
         private void LoadVersion()
         {
+            Version = "Unknown";
             var checksum = Versions.GetAuroraChecksum();
             LabelChecksum.Text = "Aurora checksum: " + checksum;
             LabelVersion.Text = "Aurora version: Unknown";
@@ -139,7 +142,10 @@ namespace AuroraLoader
                 Debug.WriteLine(mod);
                 Debug.WriteLine("");
 
-                Mods.Add(mod);
+                if (mod.WorksForVersion(Version))
+                {
+                    Mods.Add(mod);
+                }
             }
         }
 
@@ -152,7 +158,7 @@ namespace AuroraLoader
             {
                 if (!line.Contains("="))
                 {
-                    throw new Exception($"Invalid config line in {Path.GetFileName(file)}: {line}");
+                    throw new Exception($"Invalid config line in {file}: {line}");
                 }
 
                 var pieces = line.Split('=');
@@ -161,6 +167,11 @@ namespace AuroraLoader
 
                 if (key.Equals("Name"))
                 {
+                    if (val.Equals("Base Game"))
+                    {
+                        throw new Exception($"Mod name can not be Base Game in {file}");
+                    }
+
                     mod.Name = val;
                 }
                 else if (key.Equals("Status"))
@@ -179,11 +190,16 @@ namespace AuroraLoader
                     }
                     else
                     {
-                        throw new Exception($"Invalid status in {Path.GetFileName(file)}: {line}");
+                        throw new Exception($"Invalid status in {file}: {line}");
                     }
                 }
                 else if (key.Equals("Exe"))
                 {
+                    if (val.Equals("Aurora.exe"))
+                    {
+                        throw new Exception($"Mod exe can not be Aurora.exe in {file}");
+                    }
+
                     mod.Exe = val;
                 }
                 else if (key.Equals("Version"))
@@ -201,6 +217,25 @@ namespace AuroraLoader
             }
 
             return mod;
+        }
+
+        private string ApplyExeMod(Mod mod)
+        {
+            if (mod.Name.Equals("Base Game"))
+            {
+                return "Aurora.exe";
+            }
+            else
+            {
+                var dir = Path.GetDirectoryName(mod.ConfigFile);
+                var out_dir = AppDomain.CurrentDomain.BaseDirectory;
+                foreach (var file in Directory.EnumerateFiles(dir, "*.*", SearchOption.AllDirectories).Where(f => !f.Contains("mod.ini")))
+                {
+                    File.Copy(file, Path.Combine(out_dir, Path.GetFileName(file)), true);
+                }
+
+                return mod.Exe;
+            }    
         }
 
         private void CheckApproved_CheckedChanged(object sender, EventArgs e)

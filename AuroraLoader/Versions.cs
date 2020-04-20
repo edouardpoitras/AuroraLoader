@@ -19,7 +19,7 @@ namespace AuroraLoader
                 var hash = sha.ComputeHash(bytes);
                 var str = Convert.ToBase64String(hash.Take(4).ToArray());
 
-                return str;
+                return str.Substring(0, 6);
             }
         }
     }

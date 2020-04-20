@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,9 +14,208 @@ namespace AuroraLoader
 {
     public partial class Form1 : Form
     {
+        private string Version { get; set; } = null;
+        private readonly List<Mod> Mods = new List<Mod>();
+        private readonly List<Mod> AvailableExeMods = new List<Mod>();
+
         public Form1()
         {
             InitializeComponent();
+        }
+
+        private void CheckMods_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CheckMods.Checked)
+            {
+                var result = MessageBox.Show("By using mods you agree not to post bug reports to the official Aurora bug report channels.", "Warning!", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.OK)
+                {
+                    GroupMods.Enabled = true;
+                }
+                else
+                {
+                    CheckMods.Checked = false;
+                }
+            }
+            else
+            {
+                GroupMods.Enabled = false;
+                AvailableExeMods.Clear();
+                AvailableExeMods.Add(Mods.Where(m => m.Name.Equals("Base Game")).FirstOrDefault());
+                ComboExe.SelectedIndex = 0;
+                ComboExe.Refresh();
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            LoadVersion();
+
+            
+
+            
+            LoadMods();
+            UpdateLists();
+        }
+
+        private void ButtonLaunch_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void UpdateLists()
+        {
+            var selected = (Mod)ComboExe.SelectedItem;
+            var status_approved = CheckApproved.Checked;
+            var status_public = CheckPublic.Checked;
+            var status_poweruser = CheckPower.Checked;
+
+            AvailableExeMods.Clear();
+            
+            if (status_approved)
+            {
+                AvailableExeMods.AddRange(Mods.Where(m => m.Status == Mod.ModStatus.APPROVED));
+            }
+            
+            if (status_public)
+            {
+                AvailableExeMods.AddRange(Mods.Where(m => m.Status == Mod.ModStatus.PUBLIC));
+            }
+
+            if (status_poweruser)
+            {
+                AvailableExeMods.AddRange(Mods.Where(m => m.Status == Mod.ModStatus.POWERUSER));
+            }
+
+            AvailableExeMods.RemoveAll(m => m.Name.Equals("Base Game"));
+            AvailableExeMods.Sort((a, b) => a.Name.CompareTo(b.Name));
+            AvailableExeMods.Insert(0, Mods.Where(m => m.Name.Equals("Base Game")).FirstOrDefault());
+
+            ComboExe.DisplayMember = "Name";
+            ComboExe.Items.Clear();
+            ComboExe.Items.AddRange(AvailableExeMods.ToArray());
+
+            if (AvailableExeMods.Contains(selected))
+            {
+                ComboExe.SelectedItem = selected;
+            }
+            else
+            {
+                ComboExe.SelectedIndex = 0;
+            }
+
+            ComboExe.Update();
+
+            Debug.WriteLine("exes: " + AvailableExeMods.Count);
+        }
+
+        private void LoadVersion()
+        {
+            var checksum = Versions.GetAuroraChecksum();
+            LabelChecksum.Text = "Aurora checksum: " + checksum;
+            LabelVersion.Text = "Aurora version: Unknown";
+
+            var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "versions.txt");
+            var lines = File.ReadAllLines(file);
+            for (int i = 0; i < lines.Length; i += 2)
+            {
+                if (checksum.Equals(lines[i + 1]))
+                {
+                    Version = lines[i];
+                    LabelVersion.Text = "Aurora version: " + Version;
+                }
+            }
+        }
+
+        private void LoadMods()
+        {
+            Mods.Clear();
+            Mods.Add(new Mod() { Name = "Base Game", Status = Mod.ModStatus.APPROVED });
+
+            var dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mods");
+            foreach (var file in Directory.EnumerateFiles(dir, "mod.ini", SearchOption.AllDirectories))
+            {
+                var mod = GetMod(file);
+                Debug.WriteLine(mod);
+                Debug.WriteLine("");
+
+                Mods.Add(mod);
+            }
+        }
+
+        private Mod GetMod(string file)
+        {
+            var lines = File.ReadAllLines(file);
+            var mod = new Mod() { ConfigFile = file };
+
+            foreach (var line in lines.Select(l => l.Trim()).Where(l => l.Length > 0).Where(l => !l.StartsWith(";")))
+            {
+                if (!line.Contains("="))
+                {
+                    throw new Exception($"Invalid config line in {Path.GetFileName(file)}: {line}");
+                }
+
+                var pieces = line.Split('=');
+                var key = pieces[0];
+                var val = pieces[1];
+
+                if (key.Equals("Name"))
+                {
+                    mod.Name = val;
+                }
+                else if (key.Equals("Status"))
+                {
+                    if (val.Equals("Approved"))
+                    {
+                        mod.Status = Mod.ModStatus.APPROVED;
+                    }
+                    else if (val.Equals("Public"))
+                    {
+                        mod.Status = Mod.ModStatus.PUBLIC;
+                    }
+                    else if (val.Equals("Poweruser"))
+                    {
+                        mod.Status = Mod.ModStatus.POWERUSER;
+                    }
+                    else
+                    {
+                        throw new Exception($"Invalid status in {Path.GetFileName(file)}: {line}");
+                    }
+                }
+                else if (key.Equals("Exe"))
+                {
+                    mod.Exe = val;
+                }
+                else if (key.Equals("Version"))
+                {
+                    mod.Version = val;
+                }
+                else if (key.Equals("AuroraVersion"))
+                {
+                    mod.AuroraVersion = val;
+                }
+                else
+                {
+                    throw new Exception($"Invalid config line in {Path.GetFileName(file)}: {line}");
+                }
+            }
+
+            return mod;
+        }
+
+        private void CheckApproved_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateLists();
+        }
+
+        private void CheckPublic_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateLists();
+        }
+
+        private void CheckPower_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateLists();
         }
     }
 }

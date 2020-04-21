@@ -20,7 +20,7 @@ namespace AuroraLoader
 
         public bool WorksForVersion(string version)
         {
-            return version.Equals(AuroraVersion);
+            return version.StartsWith(AuroraVersion);
         }
 
         public override string ToString()

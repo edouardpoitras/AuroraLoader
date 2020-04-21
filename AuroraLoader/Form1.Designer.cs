@@ -242,6 +242,7 @@
             // 
             // ButtonUpdateMods
             // 
+            this.ButtonUpdateMods.Enabled = false;
             this.ButtonUpdateMods.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonUpdateMods.Location = new System.Drawing.Point(485, 15);
             this.ButtonUpdateMods.Name = "ButtonUpdateMods";

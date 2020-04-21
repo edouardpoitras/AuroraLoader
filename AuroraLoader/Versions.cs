@@ -34,28 +34,35 @@ namespace AuroraLoader
                 }
             }
 
-            using (var client = new WebClient())
+            try
             {
-                var str = client.DownloadString("https://raw.githubusercontent.com/01010100b/AuroraLoader/master/AuroraLoader/versions.txt");
-                lines = str.Split(new[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
-
-                for (int i = 0; i < lines.Length; i += 2)
+                using (var client = new WebClient())
                 {
-                    if (checksum.Equals(lines[i + 1]))
+                    var str = client.DownloadString("https://raw.githubusercontent.com/01010100b/AuroraLoader/master/AuroraLoader/versions.txt");
+                    lines = str.Split(new[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
+
+                    for (int i = 0; i < lines.Length; i += 2)
                     {
-                        version = lines[i];
+                        if (checksum.Equals(lines[i + 1]))
+                        {
+                            version = lines[i];
+                        }
+
+                        if (Versions.IsHigher(lines[i], highest))
+                        {
+                            highest = lines[i];
+                        }
                     }
 
-                    if (Versions.IsHigher(lines[i], highest))
+                    if (lines.Length > known)
                     {
-                        highest = lines[i];
+                        File.WriteAllLines(file, lines);
                     }
                 }
+            }
+            catch (Exception)
+            {
 
-                if (lines.Length > known)
-                {
-                    File.WriteAllLines(file, lines);
-                }
             }
 
             return version;

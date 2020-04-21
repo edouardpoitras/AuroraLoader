@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -32,6 +33,7 @@ namespace AuroraLoader
                 if (result == DialogResult.OK)
                 {
                     GroupMods.Enabled = true;
+                    ButtonUpdateMods.Enabled = true;
                     ButtonBugs.Enabled = false;
                 }
                 else
@@ -42,6 +44,7 @@ namespace AuroraLoader
             else
             {
                 GroupMods.Enabled = false;
+                ButtonUpdateMods.Enabled = false;
                 ButtonBugs.Enabled = true;
                 AvailableExeMods.Clear();
                 AvailableExeMods.Add(Mods.Where(m => m.Name.Equals("Base Game")).FirstOrDefault());
@@ -205,15 +208,32 @@ namespace AuroraLoader
 
         private void ButtonUpdateMods_Click(object sender, EventArgs e)
         {
+            Cursor = Cursors.WaitCursor;
+
             Debug.WriteLine("Start updating");
 
-            foreach (var kvp in Updater.GetUpdateUrls())
+            var urls = Updater.GetUpdateUrls();
+            if (urls.Count == 0)
             {
-                Debug.WriteLine("Updating: " + kvp.Key.Name + " at " + kvp.Value);
-                Updater.Update(kvp.Value);
+                Cursor = Cursors.Default;
+                MessageBox.Show("All mods are up to date");
+            }
+            else
+            {
+                foreach (var kvp in Updater.GetUpdateUrls())
+                {
+                    Debug.WriteLine("Updating: " + kvp.Key.Name + " at " + kvp.Value);
+                    Updater.Update(kvp.Key, kvp.Value);
+                }
             }
 
             Debug.WriteLine("Stop updating");
+
+            LoadVersion();
+            LoadMods();
+            UpdateLists();
+
+            Cursor = Cursors.Default;
         }
     }
 }

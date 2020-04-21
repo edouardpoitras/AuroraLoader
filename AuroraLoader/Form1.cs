@@ -54,6 +54,11 @@ namespace AuroraLoader
             LoadVersion();
             LoadMods();
             UpdateLists();
+
+            foreach (var kvp in Updater.GetUpdateUrls())
+            {
+                Debug.WriteLine("Update: " + kvp.Key + " at " + kvp.Value);
+            }
         }
 
         private void ButtonLaunch_Click(object sender, EventArgs e)
@@ -113,71 +118,16 @@ namespace AuroraLoader
 
         private void LoadVersion()
         {
-            Version = null;
-            var highest = "0.0.0";
-            var checksum = Versions.GetAuroraChecksum();
-            LabelChecksum.Text = "Aurora checksum: " + checksum;
-
-            try
-            {
-                var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "versions.txt");
-                var lines = File.ReadAllLines(file);
-                var known = lines.Length;
-
-                for (int i = 0; i < lines.Length; i += 2)
-                {
-                    if (checksum.Equals(lines[i + 1]))
-                    {
-                        Version = lines[i];
-                        LabelVersion.Text = "Aurora version: " + Version;
-                    }
-
-                    if (Versions.IsHigher(lines[i], highest))
-                    {
-                        highest = lines[i];
-                    }
-                }
-
-                if (Version == null)
-                {
-                    using (var client = new WebClient())
-                    {
-                        var str = client.DownloadString("https://raw.githubusercontent.com/01010100b/AuroraLoader/master/AuroraLoader/versions.txt");
-                        lines = str.Split(new[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
-
-                        for (int i = 0; i < lines.Length; i += 2)
-                        {
-                            if (checksum.Equals(lines[i + 1]))
-                            {
-                                Version = lines[i];
-                                LabelVersion.Text = "Aurora version: " + Version;
-                            }
-
-                            if (Versions.IsHigher(lines[i], highest))
-                            {
-                                highest = lines[i];
-                            }
-                        }
-
-                        if (lines.Length > known)
-                        {
-                            File.WriteAllLines(file, lines);
-                        }
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                Version = null;
-            }
-            
+            Version = Versions.GetAuroraVersion(out string highest);
             if (Version == null)
             {
-                CheckMods.Enabled = false;
                 Version = "Unknown";
-                LabelVersion.Text = "Aurora version: Unknown";
+                CheckMods.Enabled = false;
             }
-            else if (!Version.Equals(highest))
+
+            LabelVersion.Text = "Aurora version: " + Version;
+
+            if (!Version.Equals(highest))
             {
                 ButtonUpdates.Text = "Check for updates: " + highest;
                 ButtonUpdates.ForeColor = Color.Green;
@@ -197,81 +147,6 @@ namespace AuroraLoader
                     Mods.Add(mod);
                 }
             }
-        }
-
-        private Mod GetMod(string file)
-        {
-            var lines = File.ReadAllLines(file);
-            var mod = new Mod() { ConfigFile = file };
-
-            foreach (var line in lines.Select(l => l.Trim()).Where(l => l.Length > 0).Where(l => !l.StartsWith(";")))
-            {
-                if (!line.Contains("="))
-                {
-                    throw new Exception($"Invalid config line in {file}: {line}");
-                }
-
-                var pieces = line.Split('=');
-                var key = pieces[0];
-                var val = pieces[1];
-
-                if (key.Equals("Name"))
-                {
-                    if (val.Equals("Base Game"))
-                    {
-                        throw new Exception($"Mod name can not be Base Game in {file}");
-                    }
-
-                    mod.Name = val;
-                }
-                else if (key.Equals("Status"))
-                {
-                    if (val.Equals("Approved"))
-                    {
-                        mod.Status = Mod.ModStatus.APPROVED;
-                    }
-                    else if (val.Equals("Public"))
-                    {
-                        mod.Status = Mod.ModStatus.PUBLIC;
-                    }
-                    else if (val.Equals("Poweruser"))
-                    {
-                        mod.Status = Mod.ModStatus.POWERUSER;
-                    }
-                    else
-                    {
-                        throw new Exception($"Invalid status in {file}: {line}");
-                    }
-                }
-                else if (key.Equals("Exe"))
-                {
-                    if (val.Equals("Aurora.exe"))
-                    {
-                        throw new Exception($"Mod exe can not be Aurora.exe in {file}");
-                    }
-
-                    mod.Exe = val;
-                }
-                else if (key.Equals("Version"))
-                {
-                    mod.Version = val;
-                }
-                else if (key.Equals("AuroraVersion"))
-                {
-                    mod.AuroraVersion = val;
-                }
-                else
-                {
-                    throw new Exception($"Invalid config line in {Path.GetFileName(file)}: {line}");
-                }
-            }
-
-            if (mod.Name == null || mod.Name.Length < 2)
-            {
-                throw new Exception("Mod name must have length at least 2: " + file);
-            }
-
-            return mod;
         }
 
         private string ApplyExeMod(Mod mod)

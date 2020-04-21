@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,56 @@ namespace AuroraLoader
 {
     public static class Versions
     {
+        public static string GetAuroraVersion(out string highest)
+        {
+            string version = null;
+            highest = "0.0.0";
+            var checksum = Versions.GetAuroraChecksum();
+
+            var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "versions.txt");
+            var lines = File.ReadAllLines(file);
+            var known = lines.Length;
+
+            for (int i = 0; i < lines.Length; i += 2)
+            {
+                if (checksum.Equals(lines[i + 1]))
+                {
+                    version = lines[i];
+                }
+
+                if (Versions.IsHigher(lines[i], highest))
+                {
+                    highest = lines[i];
+                }
+            }
+
+            using (var client = new WebClient())
+            {
+                var str = client.DownloadString("https://raw.githubusercontent.com/01010100b/AuroraLoader/master/AuroraLoader/versions.txt");
+                lines = str.Split(new[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
+
+                for (int i = 0; i < lines.Length; i += 2)
+                {
+                    if (checksum.Equals(lines[i + 1]))
+                    {
+                        version = lines[i];
+                    }
+
+                    if (Versions.IsHigher(lines[i], highest))
+                    {
+                        highest = lines[i];
+                    }
+                }
+
+                if (lines.Length > known)
+                {
+                    File.WriteAllLines(file, lines);
+                }
+            }
+
+            return version;
+        }
+
         public static string GetAuroraChecksum()
         {
             var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Aurora.exe");

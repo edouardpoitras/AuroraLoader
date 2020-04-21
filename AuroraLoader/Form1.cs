@@ -189,13 +189,9 @@ namespace AuroraLoader
             Mods.Clear();
             Mods.Add(new Mod() { Name = "Base Game", Status = Mod.ModStatus.APPROVED });
 
-            var dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mods");
-            foreach (var file in Directory.EnumerateFiles(dir, "mod.ini", SearchOption.AllDirectories))
+            var mods = Mod.GetMods();
+            foreach (var mod in mods)
             {
-                var mod = GetMod(file);
-                Debug.WriteLine(mod);
-                Debug.WriteLine("");
-
                 if (mod.WorksForVersion(Version))
                 {
                     Mods.Add(mod);

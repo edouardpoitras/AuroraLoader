@@ -32,6 +32,7 @@ namespace AuroraLoader
                 if (result == DialogResult.OK)
                 {
                     GroupMods.Enabled = true;
+                    ButtonBugs.Enabled = false;
                 }
                 else
                 {
@@ -41,6 +42,7 @@ namespace AuroraLoader
             else
             {
                 GroupMods.Enabled = false;
+                ButtonBugs.Enabled = true;
                 AvailableExeMods.Clear();
                 AvailableExeMods.Add(Mods.Where(m => m.Name.Equals("Base Game")).FirstOrDefault());
                 ComboExe.SelectedIndex = 0;
@@ -59,10 +61,14 @@ namespace AuroraLoader
             ButtonLaunch.Enabled = false;
             ButtonLaunch.Refresh();
 
+            if (CheckMods.Checked == true)
+            {
+                ButtonBugs.Enabled = false;
+                ButtonBugs.Refresh();
+            }
+
             var exe = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ApplyExeMod(ComboExe.SelectedItem as Mod));
             Process.Start(new ProcessStartInfo(exe));
-
-            Application.Exit();
         }
 
         private void UpdateLists()
@@ -147,7 +153,7 @@ namespace AuroraLoader
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Version = null;
             }

@@ -215,7 +215,7 @@ namespace AuroraLoader
 
             Debug.WriteLine("Start updating");
 
-            var urls = Updater.GetUpdateUrls(Mods);
+            var urls = Updater.GetUpdateUrls();
             if (urls.Count == 0)
             {
                 Cursor = Cursors.Default;

@@ -116,7 +116,7 @@ namespace AuroraLoader
 
         private void LoadVersion()
         {
-            var checksum = Versions.GetAuroraChecksum();
+            var checksum = Versions.GetAuroraChecksumOld();
             LabelChecksum.Text = "Aurora checksum: " + checksum;
 
             Version = Versions.GetAuroraVersion(out string highest);
@@ -223,11 +223,14 @@ namespace AuroraLoader
             }
             else
             {
-                foreach (var kvp in Updater.GetUpdateUrls())
+                foreach (var kvp in urls)
                 {
                     Debug.WriteLine("Updating: " + kvp.Key.Name + " at " + kvp.Value);
                     Updater.Update(kvp.Key, kvp.Value);
                 }
+
+                Cursor = Cursors.Default;
+                MessageBox.Show("Updated " + urls.Count + " mods.");
             }
 
             Debug.WriteLine("Stop updating");
@@ -235,8 +238,6 @@ namespace AuroraLoader
             LoadVersion();
             LoadMods();
             UpdateLists();
-
-            Cursor = Cursors.Default;
         }
     }
 }

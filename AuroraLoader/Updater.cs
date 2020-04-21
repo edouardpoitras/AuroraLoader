@@ -38,12 +38,11 @@ namespace AuroraLoader
                     {
                         versions.Add(mod, mod.Version);
 
-                        var updates = client.DownloadString(mod.Updates).Split(new[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
+                        var updates = Config.FromString(client.DownloadString(mod.Updates));
                         foreach (var update in updates)
                         {
-                            var pieces = update.Split('=');
-                            var version = pieces[0];
-                            var url = pieces[1];
+                            var version = update.Key;
+                            var url = update.Value;
 
                             if (Versions.IsHigher(version, versions[mod]))
                             {
@@ -66,7 +65,7 @@ namespace AuroraLoader
         {
             try
             {
-                var folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mods");
+                var folder = Path.Combine(Path.GetTempPath(), "Mods");
                 var file = Path.Combine(folder, "update.current");
                 if (File.Exists(file))
                 {
@@ -82,7 +81,7 @@ namespace AuroraLoader
                 ZipFile.ExtractToDirectory(file, mod_folder);
 
                 var version = Mod.GetMod(Path.Combine(mod_folder, "mod.ini")).AuroraVersion;
-                var mod_version_folder = mod_folder + " " + version;
+                var mod_version_folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mods", mod.Name + " " + version);
                 if (Directory.Exists(mod_version_folder))
                 {
                     Directory.Delete(mod_version_folder, true);

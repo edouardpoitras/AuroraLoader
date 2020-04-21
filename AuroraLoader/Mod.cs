@@ -31,19 +31,15 @@ namespace AuroraLoader
 
         public static Mod GetMod(string file)
         {
-            var lines = File.ReadAllLines(file);
+            var str = File.ReadAllText(file);
             var mod = new Mod() { ConfigFile = file };
 
-            foreach (var line in lines.Select(l => l.Trim()).Where(l => l.Length > 0).Where(l => !l.StartsWith(";")))
-            {
-                if (!line.Contains("="))
-                {
-                    throw new Exception($"Invalid config line in {file}: {line}");
-                }
+            var settings = Config.FromString(str);
 
-                var pieces = line.Split('=');
-                var key = pieces[0];
-                var val = pieces[1];
+            foreach (var kvp in settings)
+            {
+                var key = kvp.Key;
+                var val = kvp.Value;
 
                 if (key.Equals("Name"))
                 {
@@ -70,7 +66,7 @@ namespace AuroraLoader
                     }
                     else
                     {
-                        throw new Exception($"Invalid status in {file}: {line}");
+                        throw new Exception($"Invalid status in {file}");
                     }
                 }
                 else if (key.Equals("Exe"))
@@ -96,7 +92,7 @@ namespace AuroraLoader
                 }
                 else
                 {
-                    throw new Exception($"Invalid config line in {Path.GetFileName(file)}: {line}");
+                    throw new Exception($"Invalid config line in {Path.GetFileName(file)}");
                 }
             }
 
@@ -118,7 +114,7 @@ namespace AuroraLoader
 
         public bool WorksForVersion(string version)
         {
-            return version.StartsWith(AuroraVersion);
+            return (version + ".").StartsWith(AuroraVersion + ".");
         }
 
         public override string ToString()

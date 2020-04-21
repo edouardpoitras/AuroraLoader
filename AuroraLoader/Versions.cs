@@ -11,27 +11,57 @@ namespace AuroraLoader
 {
     public static class Versions
     {
+        private static readonly string[] MIRRORS =
+        {
+            "https://raw.githubusercontent.com/01010100b/AuroraLoader/master/AuroraLoader/aurora_versions.txt"
+        };
+
         public static string GetAuroraVersion(out string highest)
         {
             string version = null;
             highest = "0.0.0";
-            var checksum = Versions.GetAuroraChecksum();
+
+            var checksum = GetAuroraChecksumOld();
+            var versions = GetKnownVersionsOld();
+            foreach (var kvp in versions)
+            {
+                if (checksum.Equals(kvp.Value))
+                {
+                    version = kvp.Key;
+                }
+
+                if (IsHigher(kvp.Key, highest))
+                {
+                    highest = kvp.Key;
+                }
+            }
+
+            return version;
+        }
+
+        public static string GetAuroraChecksum()
+        {
+            var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Aurora.exe");
+            var bytes = File.ReadAllBytes(file);
+            using (var sha = SHA256.Create())
+            {
+                var hash = sha.ComputeHash(bytes);
+                var str = Convert.ToBase64String(hash);
+
+                return str.Substring(0, 6);
+            }
+        }
+
+        public static Dictionary<string, string> GetKnownVersionsOld()
+        {
+            var versions = new Dictionary<string, string>();
 
             var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "versions.txt");
             var lines = File.ReadAllLines(file);
-            var known = lines.Length;
 
             for (int i = 0; i < lines.Length; i += 2)
             {
-                if (checksum.Equals(lines[i + 1]))
-                {
-                    version = lines[i];
-                }
-
-                if (Versions.IsHigher(lines[i], highest))
-                {
-                    highest = lines[i];
-                }
+                versions[lines[i]] = lines[i + 1];
             }
 
             try
@@ -43,20 +73,7 @@ namespace AuroraLoader
 
                     for (int i = 0; i < lines.Length; i += 2)
                     {
-                        if (checksum.Equals(lines[i + 1]))
-                        {
-                            version = lines[i];
-                        }
-
-                        if (Versions.IsHigher(lines[i], highest))
-                        {
-                            highest = lines[i];
-                        }
-                    }
-
-                    if (lines.Length > known)
-                    {
-                        File.WriteAllLines(file, lines);
+                        versions[lines[i]] = lines[i + 1];
                     }
                 }
             }
@@ -65,10 +82,21 @@ namespace AuroraLoader
 
             }
 
-            return version;
+            var list = versions.Keys.ToList();
+            list.Sort((a, b) => Versions.Compare(a, b));
+            var outlines = new List<string>();
+            foreach (var version in list)
+            {
+                outlines.Add(version);
+                outlines.Add(versions[version]);
+            }
+
+            File.WriteAllLines(file, outlines);
+
+            return versions;
         }
 
-        public static string GetAuroraChecksum()
+        public static string GetAuroraChecksumOld()
         {
             var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Aurora.exe");
             var bytes = File.ReadAllBytes(file);

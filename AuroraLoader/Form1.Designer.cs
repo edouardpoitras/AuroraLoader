@@ -90,7 +90,6 @@
             // CheckPublic
             // 
             this.CheckPublic.AutoSize = true;
-            this.CheckPublic.Enabled = false;
             this.CheckPublic.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckPublic.Location = new System.Drawing.Point(151, 25);
             this.CheckPublic.Name = "CheckPublic";
@@ -103,7 +102,6 @@
             // CheckPower
             // 
             this.CheckPower.AutoSize = true;
-            this.CheckPower.Enabled = false;
             this.CheckPower.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckPower.Location = new System.Drawing.Point(270, 25);
             this.CheckPower.Name = "CheckPower";

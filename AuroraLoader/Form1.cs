@@ -28,7 +28,7 @@ namespace AuroraLoader
         {
             if (CheckMods.Checked)
             {
-                var result = MessageBox.Show("By using mods you agree not to post bug reports to the official Aurora bug report channels.", "Warning!", MessageBoxButtons.OKCancel);
+                var result = MessageBox.Show("By using mods you agree to not post bug reports to the official Aurora bug report channels.", "Warning!", MessageBoxButtons.OKCancel);
                 if (result == DialogResult.OK)
                 {
                     GroupMods.Enabled = true;

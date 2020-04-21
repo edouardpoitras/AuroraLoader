@@ -313,5 +313,10 @@ namespace AuroraLoader
         {
             Process.Start(@"http://aurora2.pentarch.org/index.php?board=276.0");
         }
+
+        private void ButtonMods_Click(object sender, EventArgs e)
+        {
+            Process.Start(@"https://www.reddit.com/r/aurora4x_mods/");
+        }
     }
 }

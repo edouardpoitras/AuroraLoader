@@ -44,6 +44,7 @@
             this.ButtonUtilities = new System.Windows.Forms.Button();
             this.ButtonBugs = new System.Windows.Forms.Button();
             this.ButtonUpdates = new System.Windows.Forms.Button();
+            this.ButtonMods = new System.Windows.Forms.Button();
             this.GroupMods.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -227,11 +228,23 @@
             this.ButtonUpdates.UseVisualStyleBackColor = true;
             this.ButtonUpdates.Click += new System.EventHandler(this.ButtonUpdates_Click);
             // 
+            // ButtonMods
+            // 
+            this.ButtonMods.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonMods.Location = new System.Drawing.Point(29, 408);
+            this.ButtonMods.Name = "ButtonMods";
+            this.ButtonMods.Size = new System.Drawing.Size(269, 46);
+            this.ButtonMods.TabIndex = 13;
+            this.ButtonMods.Text = "Find mods";
+            this.ButtonMods.UseVisualStyleBackColor = true;
+            this.ButtonMods.Click += new System.EventHandler(this.ButtonMods_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 508);
+            this.Controls.Add(this.ButtonMods);
             this.Controls.Add(this.ButtonUpdates);
             this.Controls.Add(this.ButtonBugs);
             this.Controls.Add(this.ButtonUtilities);
@@ -270,6 +283,7 @@
         private System.Windows.Forms.Button ButtonUtilities;
         private System.Windows.Forms.Button ButtonBugs;
         private System.Windows.Forms.Button ButtonUpdates;
+        private System.Windows.Forms.Button ButtonMods;
     }
 }
 

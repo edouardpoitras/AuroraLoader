@@ -39,6 +39,41 @@ namespace AuroraLoader
             return version;
         }
 
+        public static Dictionary<string, string> GetKnownVersions()
+        {
+            var versions = new Dictionary<string, string>();
+            
+            try
+            {
+                var configs = new List<string>();
+
+                var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "aurora_versions.txt");
+                configs.Add(File.ReadAllText(file));
+
+                using (var client = new WebClient())
+                {
+                    foreach (var mirror in MIRRORS)
+                    {
+                        configs.Add(client.DownloadString(mirror));
+                    }
+                }
+
+                foreach (var str in configs)
+                {
+                    foreach (var kvp in Config.FromString(str))
+                    {
+                        versions[kvp.Key] = kvp.Value;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return versions;
+        }
+
         public static string GetAuroraChecksum()
         {
             var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Aurora.exe");

@@ -120,18 +120,11 @@ namespace AuroraLoader
             
             var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "versions.txt");
             var lines = File.ReadAllLines(file);
-            foreach (var line in lines)
-            {
-                Debug.WriteLine(line);
-            }
 
             for (int i = 0; i < lines.Length; i += 2)
             {
-                Debug.WriteLine(checksum + "=" + lines[i + 1]);
-                if (checksum.Equals(lines[i + 1].Trim()))
+                if (checksum.Equals(lines[i + 1]))
                 {
-                    
-
                     Version = lines[i];
                     LabelVersion.Text = "Aurora version: " + Version;
                 }
@@ -247,6 +240,11 @@ namespace AuroraLoader
                 {
                     throw new Exception($"Invalid config line in {Path.GetFileName(file)}: {line}");
                 }
+            }
+
+            if (mod.Name == null || mod.Name.Length < 2)
+            {
+                throw new Exception("Mod name must have length at least 2: " + file);
             }
 
             return mod;

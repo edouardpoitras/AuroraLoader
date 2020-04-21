@@ -44,7 +44,6 @@ namespace AuroraLoader
                 AvailableExeMods.Clear();
                 AvailableExeMods.Add(Mods.Where(m => m.Name.Equals("Base Game")).FirstOrDefault());
                 ComboExe.SelectedIndex = 0;
-                ComboExe.Refresh();
             }
         }
 
@@ -107,8 +106,6 @@ namespace AuroraLoader
                 ComboExe.SelectedIndex = 0;
             }
 
-            ComboExe.Update();
-
             Debug.WriteLine("exes: " + AvailableExeMods.Count);
         }
 
@@ -117,37 +114,44 @@ namespace AuroraLoader
             Version = null;
             var checksum = Versions.GetAuroraChecksum();
             LabelChecksum.Text = "Aurora checksum: " + checksum;
-            
-            var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "versions.txt");
-            var lines = File.ReadAllLines(file);
 
-            for (int i = 0; i < lines.Length; i += 2)
+            try
             {
-                if (checksum.Equals(lines[i + 1]))
-                {
-                    Version = lines[i];
-                    LabelVersion.Text = "Aurora version: " + Version;
-                }
-            }
+                var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "versions.txt");
+                var lines = File.ReadAllLines(file);
 
-            if (Version == null)
-            {
-                using (var client = new WebClient())
+                for (int i = 0; i < lines.Length; i += 2)
                 {
-                    var str = client.DownloadString("https://raw.githubusercontent.com/01010100b/AuroraLoader/master/AuroraLoader/versions.txt");
-                    lines = str.Split(new[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i = 0; i < lines.Length; i += 2)
+                    if (checksum.Equals(lines[i + 1]))
                     {
-                        if (checksum.Equals(lines[i + 1]))
+                        Version = lines[i];
+                        LabelVersion.Text = "Aurora version: " + Version;
+                    }
+                }
+
+                if (Version == null)
+                {
+                    using (var client = new WebClient())
+                    {
+                        var str = client.DownloadString("https://raw.githubusercontent.com/01010100b/AuroraLoader/master/AuroraLoader/versions.txt");
+                        lines = str.Split(new[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
+
+                        for (int i = 0; i < lines.Length; i += 2)
                         {
-                            Version = lines[i];
-                            LabelVersion.Text = "Aurora version: " + Version;
+                            if (checksum.Equals(lines[i + 1]))
+                            {
+                                Version = lines[i];
+                                LabelVersion.Text = "Aurora version: " + Version;
+                            }
                         }
                     }
                 }
             }
-
+            catch (Exception e)
+            {
+                Version = null;
+            }
+            
             if (Version == null)
             {
                 CheckMods.Enabled = false;
@@ -260,7 +264,7 @@ namespace AuroraLoader
             {
                 var dir = Path.GetDirectoryName(mod.ConfigFile);
                 var out_dir = AppDomain.CurrentDomain.BaseDirectory;
-                foreach (var file in Directory.EnumerateFiles(dir, "*.*", SearchOption.AllDirectories).Where(f => !f.Contains("mod.ini")))
+                foreach (var file in Directory.EnumerateFiles(dir, "*.*", SearchOption.AllDirectories).Where(f => !f.EndsWith("mod.ini")))
                 {
                     File.Copy(file, Path.Combine(out_dir, Path.GetFileName(file)), true);
                 }
@@ -282,6 +286,26 @@ namespace AuroraLoader
         private void CheckPower_CheckedChanged(object sender, EventArgs e)
         {
             UpdateLists();
+        }
+
+        private void ButtonForums_Click(object sender, EventArgs e)
+        {
+            Process.Start(@"http://aurora2.pentarch.org/index.php?action=forum#c14");
+        }
+
+        private void ButtonUtilities_Click(object sender, EventArgs e)
+        {
+            Process.Start(@"http://aurora2.pentarch.org/index.php?board=282.0");
+        }
+
+        private void ButtonBugs_Click(object sender, EventArgs e)
+        {
+            Process.Start(@"http://aurora2.pentarch.org/index.php?board=273.0");
+        }
+
+        private void ButtonUpdates_Click(object sender, EventArgs e)
+        {
+            Process.Start(@"http://aurora2.pentarch.org/index.php?board=276.0");
         }
     }
 }

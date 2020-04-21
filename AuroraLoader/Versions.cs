@@ -22,5 +22,58 @@ namespace AuroraLoader
                 return str.Substring(0, 6);
             }
         }
+
+        public static bool IsHigher(string a, string b)
+        {
+            return Compare(a, b) == 1;
+        }
+
+        public static int Compare(string a, string b)
+        {
+            var pieces = a.Split('.');
+            var major_a = int.Parse(pieces[0]);
+            var minor_a = int.Parse(pieces[1]);
+            var rev_a = int.Parse(pieces[2]);
+
+            pieces = b.Split('.');
+            var major_b = int.Parse(pieces[0]);
+            var minor_b = int.Parse(pieces[1]);
+            var rev_b = int.Parse(pieces[2]);
+
+            if (major_a < major_b)
+            {
+                return -1;
+            }
+            else if (major_a > major_b)
+            {
+                return 1;
+            }
+            else
+            {
+                if (minor_a < minor_b)
+                {
+                    return -1;
+                }
+                else if (minor_a > minor_b)
+                {
+                    return 1;
+                }
+                else
+                {
+                    if (rev_a < rev_b)
+                    {
+                        return -1;
+                    }
+                    else if (rev_a > rev_b)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+            }
+        }
     }
 }

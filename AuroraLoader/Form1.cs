@@ -60,6 +60,8 @@ namespace AuroraLoader
         {
             ButtonLaunch.Enabled = false;
             ButtonLaunch.Refresh();
+            CheckMods.Enabled = false;
+            CheckMods.Refresh();
 
             var exe = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ApplyExeMod(ComboExe.SelectedItem as Mod));
             Process.Start(new ProcessStartInfo(exe));
@@ -112,6 +114,7 @@ namespace AuroraLoader
         private void LoadVersion()
         {
             Version = null;
+            var highest = "0.0.0";
             var checksum = Versions.GetAuroraChecksum();
             LabelChecksum.Text = "Aurora checksum: " + checksum;
 
@@ -119,6 +122,7 @@ namespace AuroraLoader
             {
                 var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "versions.txt");
                 var lines = File.ReadAllLines(file);
+                var known = lines.Length;
 
                 for (int i = 0; i < lines.Length; i += 2)
                 {
@@ -126,6 +130,11 @@ namespace AuroraLoader
                     {
                         Version = lines[i];
                         LabelVersion.Text = "Aurora version: " + Version;
+                    }
+
+                    if (Versions.IsHigher(lines[i], highest))
+                    {
+                        highest = lines[i];
                     }
                 }
 
@@ -143,6 +152,16 @@ namespace AuroraLoader
                                 Version = lines[i];
                                 LabelVersion.Text = "Aurora version: " + Version;
                             }
+
+                            if (Versions.IsHigher(lines[i], highest))
+                            {
+                                highest = lines[i];
+                            }
+                        }
+
+                        if (lines.Length > known)
+                        {
+                            File.WriteAllLines(file, lines);
                         }
                     }
                 }
@@ -157,6 +176,11 @@ namespace AuroraLoader
                 CheckMods.Enabled = false;
                 Version = "Unknown";
                 LabelVersion.Text = "Aurora version: Unknown";
+            }
+            else if (!Version.Equals(highest))
+            {
+                ButtonUpdates.Text = "Check for updates: " + highest;
+                ButtonUpdates.ForeColor = Color.Green;
             }
         }
 

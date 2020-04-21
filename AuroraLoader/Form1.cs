@@ -116,6 +116,9 @@ namespace AuroraLoader
 
         private void LoadVersion()
         {
+            var checksum = Versions.GetAuroraChecksum();
+            LabelChecksum.Text = "Aurora checksum: " + checksum;
+
             Version = Versions.GetAuroraVersion(out string highest);
             if (Version == null)
             {

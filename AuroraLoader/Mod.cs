@@ -29,7 +29,7 @@ namespace AuroraLoader
             return mods;
         }
 
-        private static Mod GetMod(string file)
+        public static Mod GetMod(string file)
         {
             var lines = File.ReadAllLines(file);
             var mod = new Mod() { ConfigFile = file };

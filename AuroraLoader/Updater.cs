@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -54,6 +56,35 @@ namespace AuroraLoader
             }
 
             return urls;
+        }
+
+        public static void Update(Mod mod, string url)
+        {
+            var folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mods");
+            var file = Path.Combine(folder, "update.current");
+            if (File.Exists(file))
+            {
+                File.Delete(file);
+            }
+
+            using (var client = new WebClient())
+            {
+                client.DownloadFile(url, file);
+            }
+
+            var mod_folder = Path.Combine(folder, mod.Name);
+            ZipFile.ExtractToDirectory(file, mod_folder);
+
+            var version = Mod.GetMod(Path.Combine(mod_folder, "mod.ini")).AuroraVersion;
+            var mod_version_folder = mod_folder + " " + version;
+            if (Directory.Exists(mod_version_folder))
+            {
+                Directory.Delete(mod_version_folder, true);
+            }
+            ZipFile.ExtractToDirectory(file, mod_version_folder);
+
+            File.Delete(file);
+            Directory.Delete(mod_folder, true);
         }
     }
 }

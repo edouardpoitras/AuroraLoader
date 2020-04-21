@@ -54,11 +54,6 @@ namespace AuroraLoader
             LoadVersion();
             LoadMods();
             UpdateLists();
-
-            foreach (var kvp in Updater.GetUpdateUrls())
-            {
-                Debug.WriteLine("Update: " + kvp.Key + " at " + kvp.Value);
-            }
         }
 
         private void ButtonLaunch_Click(object sender, EventArgs e)
@@ -206,6 +201,19 @@ namespace AuroraLoader
         private void ButtonMods_Click(object sender, EventArgs e)
         {
             Process.Start(@"https://www.reddit.com/r/aurora4x_mods/");
+        }
+
+        private void ButtonUpdateMods_Click(object sender, EventArgs e)
+        {
+            Debug.WriteLine("Start updating");
+
+            foreach (var kvp in Updater.GetUpdateUrls())
+            {
+                Debug.WriteLine("Updating: " + kvp.Key.Name + " at " + kvp.Value);
+                Updater.Update(kvp.Value);
+            }
+
+            Debug.WriteLine("Stop updating");
         }
     }
 }

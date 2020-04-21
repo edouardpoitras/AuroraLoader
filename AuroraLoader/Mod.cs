@@ -12,7 +12,7 @@ namespace AuroraLoader
     {
         public enum ModStatus { POWERUSER, PUBLIC, APPROVED }
 
-        public static List<Mod> GetMods()
+        public static List<Mod> GetInstalledMods()
         {
             var mods = new List<Mod>();
 
@@ -20,9 +20,6 @@ namespace AuroraLoader
             foreach (var file in Directory.EnumerateFiles(dir, "mod.ini", SearchOption.AllDirectories))
             {
                 var mod = GetMod(file);
-                Debug.WriteLine(mod);
-                Debug.WriteLine("");
-
                 mods.Add(mod);
             }
 
@@ -33,74 +30,8 @@ namespace AuroraLoader
         {
             var str = File.ReadAllText(file);
             var mod = new Mod() { ConfigFile = file };
-
-            var settings = Config.FromString(str);
-
-            foreach (var kvp in settings)
-            {
-                var key = kvp.Key;
-                var val = kvp.Value;
-
-                if (key.Equals("Name"))
-                {
-                    if (val.Equals("Base Game"))
-                    {
-                        throw new Exception($"Mod name can not be Base Game in {file}");
-                    }
-
-                    mod.Name = val;
-                }
-                else if (key.Equals("Status"))
-                {
-                    if (val.Equals("Approved"))
-                    {
-                        mod.Status = Mod.ModStatus.APPROVED;
-                    }
-                    else if (val.Equals("Public"))
-                    {
-                        mod.Status = Mod.ModStatus.PUBLIC;
-                    }
-                    else if (val.Equals("Poweruser"))
-                    {
-                        mod.Status = Mod.ModStatus.POWERUSER;
-                    }
-                    else
-                    {
-                        throw new Exception($"Invalid status in {file}");
-                    }
-                }
-                else if (key.Equals("Exe"))
-                {
-                    if (val.Equals("Aurora.exe"))
-                    {
-                        throw new Exception($"Mod exe can not be Aurora.exe in {file}");
-                    }
-
-                    mod.Exe = val;
-                }
-                else if (key.Equals("Updates"))
-                {
-                    mod.Updates = val;
-                }
-                else if (key.Equals("Version"))
-                {
-                    mod.Version = val;
-                }
-                else if (key.Equals("AuroraVersion"))
-                {
-                    mod.AuroraVersion = val;
-                }
-                else
-                {
-                    throw new Exception($"Invalid config line in {Path.GetFileName(file)}");
-                }
-            }
-
-            if (mod.Name == null || mod.Name.Length < 2)
-            {
-                throw new Exception("Mod name must have length at least 2: " + file);
-            }
-
+            mod.SetConfig(str);
+            
             return mod;
         }
 
@@ -111,6 +42,76 @@ namespace AuroraLoader
         public ModStatus Status { get; set; } = ModStatus.POWERUSER;
         public string Exe { get; set; } = null;
         public string Updates { get; set; } = null;
+
+        public void SetConfig(string config)
+        {
+            var settings = Config.FromString(config);
+
+            foreach (var kvp in settings)
+            {
+                var key = kvp.Key;
+                var val = kvp.Value;
+
+                if (key.Equals("Name"))
+                {
+                    if (val.Equals("Base Game"))
+                    {
+                        throw new Exception("Mod name can not be Base Game");
+                    }
+
+                    Name = val;
+                }
+                else if (key.Equals("Status"))
+                {
+                    if (val.Equals("Approved"))
+                    {
+                        Status = Mod.ModStatus.APPROVED;
+                    }
+                    else if (val.Equals("Public"))
+                    {
+                        Status = Mod.ModStatus.PUBLIC;
+                    }
+                    else if (val.Equals("Poweruser"))
+                    {
+                        Status = Mod.ModStatus.POWERUSER;
+                    }
+                    else
+                    {
+                        throw new Exception("Invalid mod status");
+                    }
+                }
+                else if (key.Equals("Exe"))
+                {
+                    if (val.Equals("Aurora.exe"))
+                    {
+                        throw new Exception("Mod exe can not be Aurora.exe");
+                    }
+
+                    Exe = val;
+                }
+                else if (key.Equals("Updates"))
+                {
+                    Updates = val;
+                }
+                else if (key.Equals("Version"))
+                {
+                    Version = val;
+                }
+                else if (key.Equals("AuroraVersion"))
+                {
+                    AuroraVersion = val;
+                }
+                else
+                {
+                    throw new Exception("Invalid config line");
+                }
+            }
+
+            if (Name == null || Name.Length < 2)
+            {
+                throw new Exception("Mod name must have length at least 2");
+            }
+        }
 
         public bool WorksForVersion(string version)
         {

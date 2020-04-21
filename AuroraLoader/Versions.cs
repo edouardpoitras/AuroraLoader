@@ -21,8 +21,8 @@ namespace AuroraLoader
             string version = null;
             highest = "0.0.0";
 
-            var checksum = GetAuroraChecksumOld();
-            var versions = GetKnownVersionsOld();
+            var checksum = GetAuroraChecksum();
+            var versions = GetKnownVersions();
             foreach (var kvp in versions)
             {
                 if (checksum.Equals(kvp.Value))
@@ -82,63 +82,6 @@ namespace AuroraLoader
             {
                 var hash = sha.ComputeHash(bytes);
                 var str = Convert.ToBase64String(hash);
-
-                return str.Substring(0, 6);
-            }
-        }
-
-        public static Dictionary<string, string> GetKnownVersionsOld()
-        {
-            var versions = new Dictionary<string, string>();
-
-            var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "versions.txt");
-            var lines = File.ReadAllLines(file);
-
-            for (int i = 0; i < lines.Length; i += 2)
-            {
-                versions[lines[i]] = lines[i + 1];
-            }
-
-            try
-            {
-                using (var client = new WebClient())
-                {
-                    var str = client.DownloadString("https://raw.githubusercontent.com/01010100b/AuroraLoader/master/AuroraLoader/versions.txt");
-                    lines = str.Split(new[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i = 0; i < lines.Length; i += 2)
-                    {
-                        versions[lines[i]] = lines[i + 1];
-                    }
-                }
-            }
-            catch (Exception)
-            {
-
-            }
-
-            var list = versions.Keys.ToList();
-            list.Sort((a, b) => Versions.Compare(a, b));
-            var outlines = new List<string>();
-            foreach (var version in list)
-            {
-                outlines.Add(version);
-                outlines.Add(versions[version]);
-            }
-
-            File.WriteAllLines(file, outlines);
-
-            return versions;
-        }
-
-        public static string GetAuroraChecksumOld()
-        {
-            var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Aurora.exe");
-            var bytes = File.ReadAllBytes(file);
-            using (var sha = SHA256.Create())
-            {
-                var hash = sha.ComputeHash(bytes);
-                var str = Convert.ToBase64String(hash.Take(4).ToArray());
 
                 return str.Substring(0, 6);
             }

@@ -116,7 +116,7 @@ namespace AuroraLoader
 
         private void LoadVersion()
         {
-            var checksum = Versions.GetAuroraChecksumOld();
+            var checksum = Versions.GetAuroraChecksum();
             LabelChecksum.Text = "Aurora checksum: " + checksum;
 
             Version = Versions.GetAuroraVersion(out string highest);
@@ -140,7 +140,7 @@ namespace AuroraLoader
             Mods.Clear();
             Mods.Add(new Mod() { Name = "Base Game", Status = Mod.ModStatus.APPROVED });
 
-            var mods = Mod.GetMods();
+            var mods = Mod.GetInstalledMods();
             foreach (var mod in mods)
             {
                 if (mod.WorksForVersion(Version))
@@ -215,7 +215,7 @@ namespace AuroraLoader
 
             Debug.WriteLine("Start updating");
 
-            var urls = Updater.GetUpdateUrls();
+            var urls = Updater.GetUpdateUrls(Mods);
             if (urls.Count == 0)
             {
                 Cursor = Cursors.Default;

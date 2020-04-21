@@ -61,12 +61,6 @@ namespace AuroraLoader
             ButtonLaunch.Enabled = false;
             ButtonLaunch.Refresh();
 
-            if (CheckMods.Checked == true)
-            {
-                ButtonBugs.Enabled = false;
-                ButtonBugs.Refresh();
-            }
-
             var exe = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ApplyExeMod(ComboExe.SelectedItem as Mod));
             Process.Start(new ProcessStartInfo(exe));
         }

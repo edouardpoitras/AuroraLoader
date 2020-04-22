@@ -52,6 +52,7 @@
             // 
             // GroupMods
             // 
+            this.GroupMods.Controls.Add(this.ButtonConfigureMod);
             this.GroupMods.Controls.Add(this.ListDBMods);
             this.GroupMods.Controls.Add(this.LabelDBMods);
             this.GroupMods.Controls.Add(this.LabelExeMod);
@@ -81,9 +82,9 @@
             this.LabelDBMods.AutoSize = true;
             this.LabelDBMods.Location = new System.Drawing.Point(6, 114);
             this.LabelDBMods.Name = "LabelDBMods";
-            this.LabelDBMods.Size = new System.Drawing.Size(126, 20);
+            this.LabelDBMods.Size = new System.Drawing.Size(96, 20);
             this.LabelDBMods.TabIndex = 5;
-            this.LabelDBMods.Text = "Database mods:";
+            this.LabelDBMods.Text = "Other mods:";
             // 
             // LabelExeMod
             // 
@@ -257,7 +258,7 @@
             // ButtonConfigureMod
             // 
             this.ButtonConfigureMod.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonConfigureMod.Location = new System.Drawing.Point(611, 119);
+            this.ButtonConfigureMod.Location = new System.Drawing.Point(270, 69);
             this.ButtonConfigureMod.Name = "ButtonConfigureMod";
             this.ButtonConfigureMod.Size = new System.Drawing.Size(143, 33);
             this.ButtonConfigureMod.TabIndex = 15;
@@ -270,7 +271,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 508);
-            this.Controls.Add(this.ButtonConfigureMod);
             this.Controls.Add(this.ButtonUpdateMods);
             this.Controls.Add(this.ButtonMods);
             this.Controls.Add(this.ButtonUpdates);

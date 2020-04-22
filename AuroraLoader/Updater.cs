@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AuroraLoader
 {
-    class Updater
+    static class Updater
     {
         public static Dictionary<Mod, string> GetUpdateUrls()
         {

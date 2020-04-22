@@ -10,7 +10,7 @@ namespace AuroraLoader
 {
     class Mod
     {
-        public enum ModType { EXE, DB, UTILITY, ROOT_UTILITY }
+        public enum ModType { EXE, DATABASE, UTILITY, ROOT_UTILITY }
         public enum ModStatus { POWERUSER, PUBLIC, APPROVED }
 
         public static Mod BaseGame { get { return new Mod() { Name = "Base Game" }; } }
@@ -116,9 +116,9 @@ namespace AuroraLoader
                     {
                         Type = ModType.EXE;
                     }
-                    else if (val.Equals("DB"))
+                    else if (val.Equals("Database"))
                     {
-                        Type = ModType.DB;
+                        Type = ModType.DATABASE;
                     }
                     else if (val.Equals("Utility"))
                     {
@@ -152,17 +152,7 @@ namespace AuroraLoader
 
         public override string ToString()
         {
-            var sb = new StringBuilder();
-
-            sb.AppendLine("Config: " + DefFile);
-            sb.AppendLine("Name: " + Name);
-            sb.AppendLine("Version: " + Version);
-            sb.AppendLine("AuroraVersion: " + AuroraVersion);
-            sb.AppendLine("Status: " + Status);
-            sb.AppendLine("Exe: " + Exe);
-            sb.AppendLine("Updates: " + Updates);
-
-            return sb.ToString();
+            return Name + " " + Version;
         }
     }
 }

@@ -18,7 +18,6 @@ namespace AuroraLoader
     {
         private string Version { get; set; } = null;
         private readonly List<Mod> Mods = new List<Mod>();
-        private readonly List<Mod> AvailableExeMods = new List<Mod>();
 
         public Form1()
         {
@@ -46,9 +45,6 @@ namespace AuroraLoader
                 GroupMods.Enabled = false;
                 ButtonUpdateMods.Enabled = false;
                 ButtonBugs.Enabled = true;
-                AvailableExeMods.Clear();
-                AvailableExeMods.Add(Mods.Where(m => m.Name.Equals("Base Game")).FirstOrDefault());
-                ComboExe.SelectedIndex = 0;
             }
         }
 
@@ -63,55 +59,93 @@ namespace AuroraLoader
         {
             ButtonLaunch.Enabled = false;
             ButtonLaunch.Refresh();
+
+
+            var exe = Mod.BaseGame;
+            var others = new List<Mod>();
+
+            if (CheckMods.Enabled)
+            {
+                exe = ComboExe.SelectedItem as Mod;
+
+                for (int i = 0; i < ListDBMods.CheckedItems.Count; i++)
+                {
+                    others.Add(ListDBMods.CheckedItems[i] as Mod);
+                }
+            }
+
             CheckMods.Enabled = false;
             CheckMods.Refresh();
 
-            var exe = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ApplyExeMod(ComboExe.SelectedItem as Mod));
-            Process.Start(new ProcessStartInfo(exe));
+            Launcher.Launch(exe, others);
         }
 
         private void UpdateLists()
         {
-            var selected = (Mod)ComboExe.SelectedItem;
+            
             var status_approved = CheckApproved.Checked;
             var status_public = CheckPublic.Checked;
             var status_poweruser = CheckPower.Checked;
 
-            AvailableExeMods.Clear();
+            var exes = new List<Mod>();
+            var other = new List<Mod>();
             
             if (status_approved)
             {
-                AvailableExeMods.AddRange(Mods.Where(m => m.Status == Mod.ModStatus.APPROVED));
+                exes.AddRange(Mods.Where(m => m.Type == Mod.ModType.EXE && m.Status == Mod.ModStatus.APPROVED));
+                other.AddRange(Mods.Where(m => m.Type != Mod.ModType.EXE && m.Status == Mod.ModStatus.APPROVED));
             }
             
             if (status_public)
             {
-                AvailableExeMods.AddRange(Mods.Where(m => m.Status == Mod.ModStatus.PUBLIC));
+                exes.AddRange(Mods.Where(m => m.Type == Mod.ModType.EXE && m.Status == Mod.ModStatus.PUBLIC));
+                other.AddRange(Mods.Where(m => m.Type != Mod.ModType.EXE && m.Status == Mod.ModStatus.PUBLIC));
             }
 
             if (status_poweruser)
             {
-                AvailableExeMods.AddRange(Mods.Where(m => m.Status == Mod.ModStatus.POWERUSER));
+                exes.AddRange(Mods.Where(m => m.Type == Mod.ModType.EXE && m.Status == Mod.ModStatus.POWERUSER));
+                other.AddRange(Mods.Where(m => m.Type != Mod.ModType.EXE && m.Status == Mod.ModStatus.POWERUSER));
             }
 
-            AvailableExeMods.RemoveAll(m => m.Name.Equals("Base Game") || m.Exe == null);
-            AvailableExeMods.Sort((a, b) => a.Name.CompareTo(b.Name));
-            AvailableExeMods.Insert(0, Mods.Where(m => m.Name.Equals("Base Game")).FirstOrDefault());
+            exes.Sort((a, b) => a.Name.CompareTo(b.Name));
+            exes.Insert(0, Mod.BaseGame);
 
-            ComboExe.DisplayMember = "Name";
+            var selected_exe = (Mod)ComboExe.SelectedItem;
             ComboExe.Items.Clear();
-            ComboExe.Items.AddRange(AvailableExeMods.ToArray());
+            ComboExe.Items.AddRange(exes.ToArray());
 
-            if (AvailableExeMods.Contains(selected))
+            if (exes.Contains(selected_exe))
             {
-                ComboExe.SelectedItem = selected;
+                ComboExe.SelectedItem = selected_exe;
             }
             else
             {
                 ComboExe.SelectedIndex = 0;
             }
 
-            Debug.WriteLine("exes: " + AvailableExeMods.Count);
+            other.Sort();
+
+            var selected_others = new List<int>();
+            for (int i = 0; i < ListDBMods.CheckedItems.Count; i++)
+            {
+                for (int j = 0; j < other.Count; j++)
+                {
+                    if (ListDBMods.CheckedItems[i].Equals(other[j]))
+                    {
+                        selected_others.Add(j);
+                    }
+                }
+            }
+
+            ListDBMods.Items.Clear();
+            ListDBMods.Items.AddRange(other.ToArray());
+            foreach (var index in selected_others)
+            {
+                ListDBMods.SetItemChecked(index, true);
+            }
+
+            Debug.WriteLine("exes: " + exes.Count);
         }
 
         private void LoadVersion()
@@ -138,7 +172,6 @@ namespace AuroraLoader
         private void LoadMods()
         {
             Mods.Clear();
-            Mods.Add(Mod.BaseGame);
 
             var mods = Mod.GetInstalledMods();
             var latest = new Dictionary<string, Mod>();

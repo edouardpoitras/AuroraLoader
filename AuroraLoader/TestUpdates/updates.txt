@@ -1,3 +1,4 @@
 ﻿1.7.1.0=https://raw.githubusercontent.com/01010100b/AuroraLoader/master/AuroraLoader/TestUpdates/AuroraMod-1.7.1.0.zip
 1.7.3.0=https://raw.githubusercontent.com/01010100b/AuroraLoader/master/AuroraLoader/TestUpdates/AuroraMod-1.7.3.0.zip
 1.8.0.0=https://raw.githubusercontent.com/01010100b/AuroraLoader/master/AuroraLoader/TestUpdates/AuroraMod-1.8.0.0.zip
+1.8.0.1=https://raw.githubusercontent.com/01010100b/AuroraLoader/master/AuroraLoader/TestUpdates/AuroraMod-1.8.0.1.zip

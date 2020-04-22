@@ -42,14 +42,14 @@ namespace AuroraLoader
         public static Dictionary<string, string> GetKnownVersions()
         {
             var versions = new Dictionary<string, string>();
-            
+
+            var configs = new List<string>();
+
+            var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "aurora_versions.txt");
+            configs.Add(File.ReadAllText(file));
+
             try
             {
-                var configs = new List<string>();
-
-                var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "aurora_versions.txt");
-                configs.Add(File.ReadAllText(file));
-
                 using (var client = new WebClient())
                 {
                     foreach (var mirror in MIRRORS)
@@ -57,18 +57,18 @@ namespace AuroraLoader
                         configs.Add(client.DownloadString(mirror));
                     }
                 }
-
-                foreach (var str in configs)
-                {
-                    foreach (var kvp in Config.FromString(str))
-                    {
-                        versions[kvp.Key] = kvp.Value;
-                    }
-                }
             }
             catch (Exception)
             {
 
+            }
+
+            foreach (var str in configs)
+            {
+                foreach (var kvp in Config.FromString(str))
+                {
+                    versions[kvp.Key] = kvp.Value;
+                }
             }
 
             return versions;

@@ -64,7 +64,7 @@ namespace AuroraLoader
             var exe = Mod.BaseGame;
             var others = new List<Mod>();
 
-            if (CheckMods.Enabled)
+            if (CheckMods.Checked)
             {
                 exe = ComboExe.SelectedItem as Mod;
 
@@ -158,6 +158,11 @@ namespace AuroraLoader
             {
                 Version = "Unknown";
                 CheckMods.Enabled = false;
+            }
+
+            if (highest.Equals("0.0.0"))
+            {
+                highest = "Unknown";
             }
 
             LabelVersion.Text = "Aurora version: " + Version;

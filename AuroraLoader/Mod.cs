@@ -29,19 +29,20 @@ namespace AuroraLoader
         public static Mod GetMod(string file)
         {
             var str = File.ReadAllText(file);
-            var mod = new Mod() { ConfigFile = file };
+            var mod = new Mod() { DefFile = file };
             mod.SetConfig(str);
             
             return mod;
         }
 
-        public string ConfigFile { get; set; } = null;
+        public string DefFile { get; set; } = null;
         public string Name { get; set; } = null;
         public string Version { get; set; } = null;
         public string AuroraVersion { get; set; } = null;
         public ModStatus Status { get; set; } = ModStatus.POWERUSER;
         public string Exe { get; set; } = null;
         public string Updates { get; set; } = null;
+        public string ConfigFile { get; set; } = null;
 
         public void SetConfig(string config)
         {
@@ -101,6 +102,10 @@ namespace AuroraLoader
                 {
                     AuroraVersion = val;
                 }
+                else if (key.Equals("Config"))
+                {
+                    ConfigFile = val;
+                }
                 else
                 {
                     throw new Exception("Invalid config line");
@@ -122,7 +127,7 @@ namespace AuroraLoader
         {
             var sb = new StringBuilder();
 
-            sb.AppendLine("Config: " + ConfigFile);
+            sb.AppendLine("Config: " + DefFile);
             sb.AppendLine("Name: " + Name);
             sb.AppendLine("Version: " + Version);
             sb.AppendLine("AuroraVersion: " + AuroraVersion);

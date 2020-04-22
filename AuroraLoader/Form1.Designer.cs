@@ -46,6 +46,7 @@
             this.ButtonUpdates = new System.Windows.Forms.Button();
             this.ButtonMods = new System.Windows.Forms.Button();
             this.ButtonUpdateMods = new System.Windows.Forms.Button();
+            this.ButtonConfigureMod = new System.Windows.Forms.Button();
             this.GroupMods.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -101,8 +102,9 @@
             "Base Game"});
             this.ComboExe.Location = new System.Drawing.Point(83, 72);
             this.ComboExe.Name = "ComboExe";
-            this.ComboExe.Size = new System.Drawing.Size(326, 28);
+            this.ComboExe.Size = new System.Drawing.Size(181, 28);
             this.ComboExe.TabIndex = 3;
+            this.ComboExe.SelectedIndexChanged += new System.EventHandler(this.ComboExe_SelectedIndexChanged);
             // 
             // CheckPower
             // 
@@ -252,11 +254,23 @@
             this.ButtonUpdateMods.UseVisualStyleBackColor = true;
             this.ButtonUpdateMods.Click += new System.EventHandler(this.ButtonUpdateMods_Click);
             // 
+            // ButtonConfigureMod
+            // 
+            this.ButtonConfigureMod.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonConfigureMod.Location = new System.Drawing.Point(611, 119);
+            this.ButtonConfigureMod.Name = "ButtonConfigureMod";
+            this.ButtonConfigureMod.Size = new System.Drawing.Size(143, 33);
+            this.ButtonConfigureMod.TabIndex = 15;
+            this.ButtonConfigureMod.Text = "Configure";
+            this.ButtonConfigureMod.UseVisualStyleBackColor = true;
+            this.ButtonConfigureMod.Click += new System.EventHandler(this.ButtonConfigureMod_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 508);
+            this.Controls.Add(this.ButtonConfigureMod);
             this.Controls.Add(this.ButtonUpdateMods);
             this.Controls.Add(this.ButtonMods);
             this.Controls.Add(this.ButtonUpdates);
@@ -299,6 +313,7 @@
         private System.Windows.Forms.Button ButtonUpdates;
         private System.Windows.Forms.Button ButtonMods;
         private System.Windows.Forms.Button ButtonUpdateMods;
+        private System.Windows.Forms.Button ButtonConfigureMod;
     }
 }
 

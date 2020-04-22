@@ -169,7 +169,7 @@ namespace AuroraLoader
             }
             else
             {
-                var dir = Path.GetDirectoryName(mod.ConfigFile);
+                var dir = Path.GetDirectoryName(mod.DefFile);
                 var out_dir = AppDomain.CurrentDomain.BaseDirectory;
                 foreach (var file in Directory.EnumerateFiles(dir, "*.*", SearchOption.AllDirectories).Where(f => !f.EndsWith("mod.ini")))
                 {
@@ -249,6 +249,28 @@ namespace AuroraLoader
             LoadVersion();
             LoadMods();
             UpdateLists();
+        }
+
+        private void ComboExe_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var selected = (Mod)ComboExe.SelectedItem;
+
+            if (selected.ConfigFile == null)
+            {
+                ButtonConfigureMod.Enabled = false;
+            }
+            else
+            {
+                ButtonConfigureMod.Enabled = true;
+            }
+        }
+
+        private void ButtonConfigureMod_Click(object sender, EventArgs e)
+        {
+            var selected = (Mod)ComboExe.SelectedItem;
+
+            var file = Path.Combine(Path.GetDirectoryName(selected.DefFile), selected.ConfigFile);
+            Process.Start(file);
         }
     }
 }

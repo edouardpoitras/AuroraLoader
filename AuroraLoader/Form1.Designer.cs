@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.GroupMods = new System.Windows.Forms.GroupBox();
+            this.ButtonConfigureMod = new System.Windows.Forms.Button();
             this.ListDBMods = new System.Windows.Forms.CheckedListBox();
             this.LabelDBMods = new System.Windows.Forms.Label();
             this.LabelExeMod = new System.Windows.Forms.Label();
@@ -46,12 +47,13 @@
             this.ButtonUpdates = new System.Windows.Forms.Button();
             this.ButtonMods = new System.Windows.Forms.Button();
             this.ButtonUpdateMods = new System.Windows.Forms.Button();
-            this.ButtonConfigureMod = new System.Windows.Forms.Button();
+            this.ButtonConfigureSelected = new System.Windows.Forms.Button();
             this.GroupMods.SuspendLayout();
             this.SuspendLayout();
             // 
             // GroupMods
             // 
+            this.GroupMods.Controls.Add(this.ButtonConfigureSelected);
             this.GroupMods.Controls.Add(this.ButtonConfigureMod);
             this.GroupMods.Controls.Add(this.ListDBMods);
             this.GroupMods.Controls.Add(this.LabelDBMods);
@@ -69,18 +71,30 @@
             this.GroupMods.TabStop = false;
             this.GroupMods.Text = "Mods";
             // 
+            // ButtonConfigureMod
+            // 
+            this.ButtonConfigureMod.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonConfigureMod.Location = new System.Drawing.Point(270, 69);
+            this.ButtonConfigureMod.Name = "ButtonConfigureMod";
+            this.ButtonConfigureMod.Size = new System.Drawing.Size(143, 33);
+            this.ButtonConfigureMod.TabIndex = 15;
+            this.ButtonConfigureMod.Text = "Configure";
+            this.ButtonConfigureMod.UseVisualStyleBackColor = true;
+            this.ButtonConfigureMod.Click += new System.EventHandler(this.ButtonConfigureMod_Click);
+            // 
             // ListDBMods
             // 
             this.ListDBMods.FormattingEnabled = true;
-            this.ListDBMods.Location = new System.Drawing.Point(10, 150);
+            this.ListDBMods.Location = new System.Drawing.Point(6, 150);
             this.ListDBMods.Name = "ListDBMods";
             this.ListDBMods.Size = new System.Drawing.Size(403, 277);
             this.ListDBMods.TabIndex = 6;
+            this.ListDBMods.SelectedIndexChanged += new System.EventHandler(this.ListDBMods_SelectedIndexChanged);
             // 
             // LabelDBMods
             // 
             this.LabelDBMods.AutoSize = true;
-            this.LabelDBMods.Location = new System.Drawing.Point(6, 114);
+            this.LabelDBMods.Location = new System.Drawing.Point(2, 127);
             this.LabelDBMods.Name = "LabelDBMods";
             this.LabelDBMods.Size = new System.Drawing.Size(96, 20);
             this.LabelDBMods.TabIndex = 5;
@@ -255,16 +269,17 @@
             this.ButtonUpdateMods.UseVisualStyleBackColor = true;
             this.ButtonUpdateMods.Click += new System.EventHandler(this.ButtonUpdateMods_Click);
             // 
-            // ButtonConfigureMod
+            // ButtonConfigureSelected
             // 
-            this.ButtonConfigureMod.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonConfigureMod.Location = new System.Drawing.Point(270, 69);
-            this.ButtonConfigureMod.Name = "ButtonConfigureMod";
-            this.ButtonConfigureMod.Size = new System.Drawing.Size(143, 33);
-            this.ButtonConfigureMod.TabIndex = 15;
-            this.ButtonConfigureMod.Text = "Configure";
-            this.ButtonConfigureMod.UseVisualStyleBackColor = true;
-            this.ButtonConfigureMod.Click += new System.EventHandler(this.ButtonConfigureMod_Click);
+            this.ButtonConfigureSelected.Enabled = false;
+            this.ButtonConfigureSelected.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonConfigureSelected.Location = new System.Drawing.Point(121, 114);
+            this.ButtonConfigureSelected.Name = "ButtonConfigureSelected";
+            this.ButtonConfigureSelected.Size = new System.Drawing.Size(288, 33);
+            this.ButtonConfigureSelected.TabIndex = 16;
+            this.ButtonConfigureSelected.Text = "Configure selected";
+            this.ButtonConfigureSelected.UseVisualStyleBackColor = true;
+            this.ButtonConfigureSelected.Click += new System.EventHandler(this.ButtonConfigureSelected_Click);
             // 
             // Form1
             // 
@@ -314,6 +329,7 @@
         private System.Windows.Forms.Button ButtonMods;
         private System.Windows.Forms.Button ButtonUpdateMods;
         private System.Windows.Forms.Button ButtonConfigureMod;
+        private System.Windows.Forms.Button ButtonConfigureSelected;
     }
 }
 

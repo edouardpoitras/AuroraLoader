@@ -118,10 +118,19 @@ namespace AuroraLoader
             if (exes.Contains(selected_exe))
             {
                 ComboExe.SelectedItem = selected_exe;
+                if (selected_exe.ConfigFile == null)
+                {
+                    ButtonConfigureMod.Enabled = false;
+                }
+                else
+                {
+                    ButtonConfigureMod.Enabled = true;
+                }
             }
             else
             {
                 ComboExe.SelectedIndex = 0;
+                ButtonConfigureMod.Enabled = false;
             }
 
             other.Sort((a, b) => a.Name.CompareTo(b.Name));
@@ -144,6 +153,8 @@ namespace AuroraLoader
             {
                 ListDBMods.SetItemChecked(index, true);
             }
+
+            ButtonConfigureSelected.Enabled = false;
 
             Debug.WriteLine("exes: " + exes.Count);
         }
@@ -305,10 +316,31 @@ namespace AuroraLoader
 
         private void ButtonConfigureMod_Click(object sender, EventArgs e)
         {
-            var selected = (Mod)ComboExe.SelectedItem;
+            var selected = ComboExe.SelectedItem as Mod;
 
             var file = Path.Combine(Path.GetDirectoryName(selected.DefFile), selected.ConfigFile);
             Process.Start(file);
+        }
+
+        private void ButtonConfigureSelected_Click(object sender, EventArgs e)
+        {
+            var selected = ListDBMods.SelectedItem as Mod;
+
+            var file = Path.Combine(Path.GetDirectoryName(selected.DefFile), selected.ConfigFile);
+            Process.Start(file);
+        }
+
+        private void ListDBMods_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var selected = ListDBMods.SelectedItem as Mod;
+            if (selected == null || selected.ConfigFile == null)
+            {
+                ButtonConfigureSelected.Enabled = false;
+            }
+            else
+            {
+                ButtonConfigureSelected.Enabled = true;
+            }
         }
     }
 }

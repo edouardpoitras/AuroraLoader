@@ -83,7 +83,7 @@ namespace AuroraLoader
                 var hash = sha.ComputeHash(bytes);
                 var str = Convert.ToBase64String(hash);
 
-                return str.Substring(0, 6);
+                return str.Replace("/", "").Replace("+", "").Replace("=", "").Substring(0, 6);
             }
         }
 

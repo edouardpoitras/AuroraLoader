@@ -124,7 +124,7 @@ namespace AuroraLoader
                 ComboExe.SelectedIndex = 0;
             }
 
-            other.Sort();
+            other.Sort((a, b) => a.Name.CompareTo(b.Name));
 
             var selected_others = new List<int>();
             for (int i = 0; i < ListDBMods.CheckedItems.Count; i++)

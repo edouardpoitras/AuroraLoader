@@ -24,7 +24,7 @@ namespace AuroraLoader
             {
                 if (!line.Contains("="))
                 {
-                    throw new Exception("Invalid config file line: " + line);
+                    throw new Exception("Invalid config line: " + line);
                 }
 
                 var index = line.IndexOf('=');
@@ -41,18 +41,9 @@ namespace AuroraLoader
         {
             var sb = new StringBuilder();
 
-            var lines = new List<string>();
-
             foreach (var kvp in values)
             {
-                lines.Add(kvp.Key + "=" + kvp.Value);
-            }
-
-            lines.Sort();
-
-            foreach (var line in lines)
-            {
-                sb.AppendLine(line);
+                sb.AppendLine(kvp.Key + "=" + kvp.Value);
             }
 
             return sb.ToString();

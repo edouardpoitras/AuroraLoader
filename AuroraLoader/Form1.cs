@@ -138,7 +138,7 @@ namespace AuroraLoader
         private void LoadMods()
         {
             Mods.Clear();
-            Mods.Add(new Mod() { Name = "Base Game", Status = Mod.ModStatus.APPROVED });
+            Mods.Add(Mod.BaseGame);
 
             var mods = Mod.GetInstalledMods();
             var latest = new Dictionary<string, Mod>();

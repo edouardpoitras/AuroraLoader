@@ -34,18 +34,28 @@ namespace AuroraLoader
             {
                 foreach (var mod in updaters.Values)
                 {
-                    versions.Add(mod, mod.Version);
-
-                    var updates = Config.FromString(client.DownloadString(mod.Updates));
-                    foreach (var update in updates)
+                    try
                     {
-                        var version = update.Key;
-                        var url = update.Value;
+                        versions.Add(mod, mod.Version);
 
-                        if (Versions.IsHigher(version, versions[mod]))
+                        var updates = Config.FromString(client.DownloadString(mod.Updates));
+                        foreach (var update in updates)
                         {
-                            versions[mod] = version;
-                            urls[mod] = url;
+                            var version = update.Key;
+                            var url = update.Value;
+
+                            if (Versions.IsHigher(version, versions[mod]))
+                            {
+                                versions[mod] = version;
+                                urls[mod] = url;
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        if (versions.ContainsKey(mod))
+                        {
+                            versions.Remove(mod);
                         }
                     }
                 }

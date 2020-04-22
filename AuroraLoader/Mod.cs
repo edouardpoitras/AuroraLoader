@@ -10,7 +10,10 @@ namespace AuroraLoader
 {
     class Mod
     {
+        public enum ModType { EXE, DB, UTILITY, ROOT_UTILITY }
         public enum ModStatus { POWERUSER, PUBLIC, APPROVED }
+
+        public static Mod BaseGame { get { return new Mod() { Name = "Base Game" }; } }
 
         public static List<Mod> GetInstalledMods()
         {
@@ -35,14 +38,15 @@ namespace AuroraLoader
             return mod;
         }
 
-        public string DefFile { get; set; } = null;
-        public string Name { get; set; } = null;
-        public string Version { get; set; } = null;
-        public string AuroraVersion { get; set; } = null;
-        public ModStatus Status { get; set; } = ModStatus.POWERUSER;
-        public string Exe { get; set; } = null;
-        public string Updates { get; set; } = null;
-        public string ConfigFile { get; set; } = null;
+        public string DefFile { get; private set; } = null;
+        public string Name { get; private set; } = null;
+        public ModType Type { get; private set; } = ModType.EXE;
+        public string Version { get; private set; } = null;
+        public string AuroraVersion { get; private set; } = null;
+        public string Exe { get; private set; } = null;
+        public string ConfigFile { get; private set; } = null;
+        public ModStatus Status { get; private set; } = ModStatus.POWERUSER;
+        public string Updates { get; private set; } = null;
 
         public void SetConfig(string config)
         {
@@ -105,6 +109,29 @@ namespace AuroraLoader
                 else if (key.Equals("Config"))
                 {
                     ConfigFile = val;
+                }
+                else if (key.Equals("Type"))
+                {
+                    if (val.Equals("Exe"))
+                    {
+                        Type = ModType.EXE;
+                    }
+                    else if (val.Equals("DB"))
+                    {
+                        Type = ModType.DB;
+                    }
+                    else if (val.Equals("Utility"))
+                    {
+                        Type = ModType.UTILITY;
+                    }
+                    else if (val.Equals("RootUtility"))
+                    {
+                        Type = ModType.ROOT_UTILITY;
+                    }
+                    else
+                    {
+                        throw new Exception("Invalid mod type: " + val);
+                    }
                 }
                 else
                 {

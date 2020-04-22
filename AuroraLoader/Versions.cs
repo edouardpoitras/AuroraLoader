@@ -68,7 +68,7 @@ namespace AuroraLoader
             }
             catch (Exception)
             {
-
+                versions = null;
             }
 
             return versions;

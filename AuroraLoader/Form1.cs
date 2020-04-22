@@ -141,13 +141,24 @@ namespace AuroraLoader
             Mods.Add(new Mod() { Name = "Base Game", Status = Mod.ModStatus.APPROVED });
 
             var mods = Mod.GetInstalledMods();
+            var latest = new Dictionary<string, Mod>();
+
             foreach (var mod in mods)
             {
                 if (mod.WorksForVersion(Version))
                 {
-                    Mods.Add(mod);
+                    if (!latest.ContainsKey(mod.Name))
+                    {
+                        latest.Add(mod.Name, mod);
+                    }
+                    else if (Versions.IsHigher(mod.Version, latest[mod.Name].Version))
+                    {
+                        latest[mod.Name] = mod;
+                    }
                 }
             }
+
+            Mods.AddRange(latest.Values);
         }
 
         private string ApplyExeMod(Mod mod)

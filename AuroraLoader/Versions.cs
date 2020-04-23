@@ -13,7 +13,7 @@ namespace AuroraLoader
     {
         private static readonly string[] MIRRORS =
         {
-            "https://raw.githubusercontent.com/01010100b/AuroraLoader/master/AuroraLoader/aurora_versions.txt"
+            "https://raw.githubusercontent.com/Aurora-Modders/AuroraMods/master/Aurora/aurora_versions.txt",
         };
 
         public static string GetAuroraVersion(out string highest)

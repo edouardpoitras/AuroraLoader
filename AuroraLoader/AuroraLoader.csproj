@@ -89,11 +89,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="TestUpdates\AuroraMod-1.7.1.0.zip" />
-    <None Include="TestUpdates\AuroraMod-1.7.3.0.zip" />
-    <None Include="TestUpdates\AuroraMod-1.8.0.0.zip" />
-    <None Include="TestUpdates\AuroraMod-1.8.0.1.zip" />
-    <None Include="TestUpdates\AuroraMod-1.8.0.2.zip" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

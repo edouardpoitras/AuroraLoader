@@ -80,13 +80,13 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="Mods\AuroraElectrons 1.8\mod.ini">
+    <None Include="Mods\AuroraElectrons\1.8\mod.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Mods\AuroraMod 1.6\Aurora.mod.config">
+    <None Include="Mods\AuroraMod\1.6\Aurora.mod.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Mods\AuroraMod 1.6\mod.ini">
+    <None Include="Mods\AuroraMod\1.6\mod.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">
@@ -107,13 +107,13 @@
     <Content Include="aurora_versions.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Mods\AuroraElectrons 1.8\aurora-electrons-0.1.0.exe">
+    <Content Include="Mods\AuroraElectrons\1.8\aurora-electrons-0.1.0.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Mods\AuroraMod 1.6\Aurora.mod.txt">
+    <Content Include="Mods\AuroraMod\1.6\Aurora.mod.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Mods\AuroraMod 1.6\AuroraMod.exe">
+    <Content Include="Mods\AuroraMod\1.6\AuroraMod.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestUpdates\updates.txt" />

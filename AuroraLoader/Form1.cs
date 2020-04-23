@@ -77,14 +77,15 @@ namespace AuroraLoader
             }
 
             CheckMods.Enabled = false;
-            CheckMods.Refresh();
+            ButtonInstallMods.Enabled = false;
+            ButtonUpdateMods.Enabled = false;
+            GroupMods.Enabled = false;
 
             Launcher.Launch(exe, others);
         }
 
         private void UpdateLists()
         {
-            
             var status_approved = CheckApproved.Checked;
             var status_public = CheckPublic.Checked;
             var status_poweruser = CheckPower.Checked;
@@ -158,7 +159,18 @@ namespace AuroraLoader
 
             ButtonConfigureSelected.Enabled = false;
 
-            Debug.WriteLine("exes: " + exes.Count);
+            ButtonUpdateMods.ForeColor = Color.Black;
+            try
+            {
+                if (Updater.GetUpdateUrls().Count > 0)
+                {
+                    ButtonUpdateMods.ForeColor = Color.Green;
+                }
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         private void LoadVersion()

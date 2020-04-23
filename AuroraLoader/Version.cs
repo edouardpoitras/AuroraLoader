@@ -121,14 +121,25 @@ namespace AuroraLoader
                 }
                 else
                 {
-                    var v_a = int.Parse(pieces_a[i]);
-                    var v_b = int.Parse(pieces_b[i]);
-
-                    if (v_a < v_b)
+                    if (int.TryParse(pieces_a[i], out int v_a))
                     {
-                        return -1;
+                        if (int.TryParse(pieces_b[i], out int v_b))
+                        {
+                            if (v_a < v_b)
+                            {
+                                return -1;
+                            }
+                            else if (v_a > v_b)
+                            {
+                                return 1;
+                            }
+                        }
+                        else
+                        {
+                            return -1;
+                        }
                     }
-                    else if (v_a > v_b)
+                    else
                     {
                         return 1;
                     }
@@ -137,6 +148,10 @@ namespace AuroraLoader
 
             return 0;
         }
+
+        public int Major { get { return GetMajor(); } }
+        public int Minor { get { return GetMinor(); } }
+        public int Rev { get { return GetRev(); } }
 
         private readonly string String;
 
@@ -162,9 +177,9 @@ namespace AuroraLoader
 
         public override bool Equals(object obj)
         {
-            if (obj is Version && obj != null)
+            if (obj is Version version)
             {
-                return CompareTo(obj as Version) == 0;
+                return Equals(version);
             }
             else
             {
@@ -188,14 +203,43 @@ namespace AuroraLoader
             return 2096090648 + EqualityComparer<string>.Default.GetHashCode(String);
         }
 
-        public static bool operator ==(Version left, Version right)
+        private int GetMajor()
         {
-            return EqualityComparer<Version>.Default.Equals(left, right);
+            var pieces = String.Split('.');
+            if (pieces.Length > 0 && int.TryParse(pieces[0], out int major))
+            {
+                return major;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
-        public static bool operator !=(Version left, Version right)
+        private int GetMinor()
         {
-            return !(left == right);
+            var pieces = String.Split('.');
+            if (pieces.Length > 1 && int.TryParse(pieces[1], out int minor))
+            {
+                return minor;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        private int GetRev()
+        {
+            var pieces = String.Split('.');
+            if (pieces.Length > 2 && int.TryParse(pieces[2], out int rev))
+            {
+                return rev;
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
 }

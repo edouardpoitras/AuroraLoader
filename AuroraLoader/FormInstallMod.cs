@@ -13,6 +13,13 @@ namespace AuroraLoader
 {
     public partial class FormInstallMod : Form
     {
+        private static readonly string[] MIRRORS =
+        {
+            "https://raw.githubusercontent.com/Aurora-Modders/AuroraMods/master/Mods/mods.txt"
+        };
+
+        private readonly Dictionary<string, string> KnownMods = new Dictionary<string, string>();
+
         public FormInstallMod()
         {
             InitializeComponent();
@@ -23,12 +30,19 @@ namespace AuroraLoader
             ButtonOk.Enabled = false;
             ButtonCancel.Enabled = false;
 
+            var update = TextUrl.Text;
+            var selected = (string)ComboMods.SelectedItem;
+            if (selected != null && !"".Equals(selected))
+            {
+                update = KnownMods[selected];
+            }
+
             try
             {
                 var url = "";
                 using (var client = new WebClient())
                 {
-                    var updates = Config.FromString(client.DownloadString(TextUrl.Text));
+                    var updates = Config.FromString(client.DownloadString(update));
                     var highest = new Version("0.0.0");
 
                     foreach (var kvp in updates)
@@ -48,6 +62,14 @@ namespace AuroraLoader
                     Updater.Update(url);
                     MessageBox.Show("Mod installed");
                 }
+
+                TextUrl.Text = "";
+
+                if (KnownMods.ContainsKey(selected))
+                {
+                    KnownMods.Remove(selected);
+                    UpdateCombo();
+                }
             }
             catch (Exception)
             {
@@ -65,12 +87,47 @@ namespace AuroraLoader
 
         private void FormInstallMod_Load(object sender, EventArgs e)
         {
-            var installed_mods = Mod.GetInstalledMods();
-            var known_mods = new Dictionary<string, string>();
+            var installed = Mod.GetInstalledMods().Select(m => m.Name).ToList();
 
             try
             {
+                using (var client = new WebClient())
+                {
+                    foreach (var mirror in MIRRORS)
+                    {
+                        var mods = Config.FromString(client.DownloadString(mirror));
+                        foreach (var kvp in mods)
+                        {
+                            if (!installed.Contains(kvp.Key))
+                            {
+                                KnownMods[kvp.Key] = kvp.Value;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
 
+            }
+
+            UpdateCombo();
+        }
+
+        private void UpdateCombo()
+        {
+            if (KnownMods.Count > 0)
+            {
+                ComboMods.Items.Clear();
+                ComboMods.Items.Add("");
+                ComboMods.Items.AddRange(KnownMods.Keys.ToArray());
+                ComboMods.SelectedIndex = 0;
+                ComboMods.Enabled = true;
+            }
+            else
+            {
+                ComboMods.Items.Clear();
+                ComboMods.Enabled = false;
             }
         }
     }

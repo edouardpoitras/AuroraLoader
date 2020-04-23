@@ -80,9 +80,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="Mods\AuroraElectrons\1.8\mod.ini">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Mods\AuroraMod\1.6\Aurora.mod.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -105,9 +102,6 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="aurora_versions.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Mods\AuroraElectrons\1.8\aurora-electrons-0.1.0.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Mods\AuroraMod\1.6\Aurora.mod.txt">

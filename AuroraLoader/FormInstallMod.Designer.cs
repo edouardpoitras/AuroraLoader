@@ -33,6 +33,7 @@
             this.ButtonCancel = new System.Windows.Forms.Button();
             this.LabelUrl = new System.Windows.Forms.Label();
             this.ComboMods = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // TextUrl
@@ -56,6 +57,7 @@
             // 
             // ButtonCancel
             // 
+            this.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ButtonCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonCancel.Location = new System.Drawing.Point(292, 173);
             this.ButtonCancel.Name = "ButtonCancel";
@@ -71,30 +73,45 @@
             this.LabelUrl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelUrl.Location = new System.Drawing.Point(52, 93);
             this.LabelUrl.Name = "LabelUrl";
-            this.LabelUrl.Size = new System.Drawing.Size(214, 20);
+            this.LabelUrl.Size = new System.Drawing.Size(233, 20);
             this.LabelUrl.TabIndex = 3;
-            this.LabelUrl.Text = "Enter the mod installation url:";
+            this.LabelUrl.Text = "Or enter the mod installation url:";
             // 
             // ComboMods
             // 
+            this.ComboMods.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboMods.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboMods.FormattingEnabled = true;
-            this.ComboMods.Location = new System.Drawing.Point(56, 62);
+            this.ComboMods.Location = new System.Drawing.Point(161, 58);
             this.ComboMods.Name = "ComboMods";
-            this.ComboMods.Size = new System.Drawing.Size(442, 28);
+            this.ComboMods.Size = new System.Drawing.Size(553, 28);
             this.ComboMods.TabIndex = 4;
+            this.ComboMods.SelectedIndexChanged += new System.EventHandler(this.ComboMods_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(52, 61);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(103, 20);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Choose mod:";
             // 
             // FormInstallMod
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 274);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.ComboMods);
             this.Controls.Add(this.LabelUrl);
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.ButtonOk);
             this.Controls.Add(this.TextUrl);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "FormInstallMod";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Install Mods";
             this.Load += new System.EventHandler(this.FormInstallMod_Load);
             this.ResumeLayout(false);
@@ -109,5 +126,6 @@
         private System.Windows.Forms.Button ButtonCancel;
         private System.Windows.Forms.Label LabelUrl;
         private System.Windows.Forms.ComboBox ComboMods;
+        private System.Windows.Forms.Label label1;
     }
 }

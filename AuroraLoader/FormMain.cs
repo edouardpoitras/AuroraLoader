@@ -62,7 +62,6 @@ namespace AuroraLoader
             ButtonLaunch.Enabled = false;
             ButtonLaunch.Refresh();
 
-
             var exe = Mod.BaseGame;
             var others = new List<Mod>();
 
@@ -264,7 +263,6 @@ namespace AuroraLoader
         private void ButtonUpdateMods_Click(object sender, EventArgs e)
         {
             Cursor = Cursors.WaitCursor;
-
             Debug.WriteLine("Start updating");
 
             var urls = Updater.GetUpdateUrls();
@@ -284,7 +282,9 @@ namespace AuroraLoader
                     }
                     catch (Exception)
                     {
+                        Cursor = Cursors.Default;
                         MessageBox.Show("Failed to update " + kvp.Key.Name);
+                        Cursor = Cursors.WaitCursor;
                     }
                 }
 
@@ -294,7 +294,6 @@ namespace AuroraLoader
 
             Debug.WriteLine("Stop updating");
 
-            LoadVersion();
             LoadMods();
             UpdateLists();
         }
@@ -347,6 +346,7 @@ namespace AuroraLoader
             var form = new FormInstallMod();
             form.ShowDialog();
 
+            LoadMods();
             UpdateLists();
         }
     }

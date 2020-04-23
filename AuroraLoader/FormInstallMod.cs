@@ -29,10 +29,11 @@ namespace AuroraLoader
         {
             ButtonOk.Enabled = false;
             ButtonCancel.Enabled = false;
+            Cursor = Cursors.WaitCursor;
 
             var update = TextUrl.Text;
             var selected = (string)ComboMods.SelectedItem;
-            if (selected != null && !"".Equals(selected))
+            if (selected != null && !selected.Equals("Use url"))
             {
                 update = KnownMods[selected];
             }
@@ -60,19 +61,21 @@ namespace AuroraLoader
                 if (!"".Equals(url))
                 {
                     Updater.Update(url);
+                    TextUrl.Text = "";
+
+                    if (KnownMods.ContainsKey(selected))
+                    {
+                        KnownMods.Remove(selected);
+                        UpdateCombo();
+                    }
+
+                    Cursor = Cursors.Default;
                     MessageBox.Show("Mod installed");
-                }
-
-                TextUrl.Text = "";
-
-                if (KnownMods.ContainsKey(selected))
-                {
-                    KnownMods.Remove(selected);
-                    UpdateCombo();
                 }
             }
             catch (Exception)
             {
+                Cursor = Cursors.Default;
                 MessageBox.Show("Failed to install mod");
             }
 
@@ -119,7 +122,7 @@ namespace AuroraLoader
             if (KnownMods.Count > 0)
             {
                 ComboMods.Items.Clear();
-                ComboMods.Items.Add("");
+                ComboMods.Items.Add("Use url");
                 ComboMods.Items.AddRange(KnownMods.Keys.ToArray());
                 ComboMods.SelectedIndex = 0;
                 ComboMods.Enabled = true;
@@ -127,7 +130,21 @@ namespace AuroraLoader
             else
             {
                 ComboMods.Items.Clear();
+                ComboMods.Items.Add("Use url");
+                ComboMods.SelectedIndex = 0;
                 ComboMods.Enabled = false;
+            }
+        }
+
+        private void ComboMods_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ComboMods.SelectedIndex == 0)
+            {
+                TextUrl.Enabled = true;
+            }
+            else
+            {
+                TextUrl.Enabled = false;
             }
         }
     }

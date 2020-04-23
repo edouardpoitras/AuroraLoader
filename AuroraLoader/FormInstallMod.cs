@@ -62,5 +62,16 @@ namespace AuroraLoader
         {
             Close();
         }
+
+        private void FormInstallMod_Load(object sender, EventArgs e)
+        {
+            var installed_mods = Mod.GetInstalledMods();
+            var known_mods = new Dictionary<string, string>();
+
+            try
+            {
+
+            }
+        }
     }
 }

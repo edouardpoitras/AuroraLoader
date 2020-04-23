@@ -38,6 +38,7 @@ namespace AuroraLoader
 
             if (exe.Name.Equals("Base Game"))
             {
+                Debug.WriteLine("Exe: " + exe.Name);
                 Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Aurora.exe"));
             }
             else

@@ -14,12 +14,12 @@ using System.Windows.Forms;
 
 namespace AuroraLoader
 {
-    public partial class Form1 : Form
+    public partial class FormMain : Form
     {
         private Version AuroraVersion { get; set; } = null;
         private readonly List<Mod> Mods = new List<Mod>();
 
-        public Form1()
+        public FormMain()
         {
             InitializeComponent();
         }

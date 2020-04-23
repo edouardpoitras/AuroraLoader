@@ -32,12 +32,13 @@
             this.ButtonOk = new System.Windows.Forms.Button();
             this.ButtonCancel = new System.Windows.Forms.Button();
             this.LabelUrl = new System.Windows.Forms.Label();
+            this.ComboMods = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // TextUrl
             // 
             this.TextUrl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextUrl.Location = new System.Drawing.Point(61, 67);
+            this.TextUrl.Location = new System.Drawing.Point(56, 116);
             this.TextUrl.Name = "TextUrl";
             this.TextUrl.Size = new System.Drawing.Size(658, 26);
             this.TextUrl.TabIndex = 0;
@@ -45,7 +46,7 @@
             // ButtonOk
             // 
             this.ButtonOk.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonOk.Location = new System.Drawing.Point(61, 124);
+            this.ButtonOk.Location = new System.Drawing.Point(56, 173);
             this.ButtonOk.Name = "ButtonOk";
             this.ButtonOk.Size = new System.Drawing.Size(206, 79);
             this.ButtonOk.TabIndex = 1;
@@ -56,7 +57,7 @@
             // ButtonCancel
             // 
             this.ButtonCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonCancel.Location = new System.Drawing.Point(297, 124);
+            this.ButtonCancel.Location = new System.Drawing.Point(292, 173);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(206, 79);
             this.ButtonCancel.TabIndex = 2;
@@ -68,23 +69,34 @@
             // 
             this.LabelUrl.AutoSize = true;
             this.LabelUrl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelUrl.Location = new System.Drawing.Point(57, 44);
+            this.LabelUrl.Location = new System.Drawing.Point(52, 93);
             this.LabelUrl.Name = "LabelUrl";
             this.LabelUrl.Size = new System.Drawing.Size(214, 20);
             this.LabelUrl.TabIndex = 3;
             this.LabelUrl.Text = "Enter the mod installation url:";
+            // 
+            // ComboMods
+            // 
+            this.ComboMods.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboMods.FormattingEnabled = true;
+            this.ComboMods.Location = new System.Drawing.Point(56, 62);
+            this.ComboMods.Name = "ComboMods";
+            this.ComboMods.Size = new System.Drawing.Size(442, 28);
+            this.ComboMods.TabIndex = 4;
             // 
             // FormInstallMod
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 274);
+            this.Controls.Add(this.ComboMods);
             this.Controls.Add(this.LabelUrl);
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.ButtonOk);
             this.Controls.Add(this.TextUrl);
             this.Name = "FormInstallMod";
-            this.Text = "FormInstallMod";
+            this.Text = "Install Mods";
+            this.Load += new System.EventHandler(this.FormInstallMod_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -96,5 +108,6 @@
         private System.Windows.Forms.Button ButtonOk;
         private System.Windows.Forms.Button ButtonCancel;
         private System.Windows.Forms.Label LabelUrl;
+        private System.Windows.Forms.ComboBox ComboMods;
     }
 }

@@ -18,7 +18,7 @@ namespace AuroraLoader
             Debug.WriteLine("checksum: " + Version.GetAuroraChecksum());
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new FormMain());
         }
 
         public static DialogResult ShowInputDialog(ref string input)

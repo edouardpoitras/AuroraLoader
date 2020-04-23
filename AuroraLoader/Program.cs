@@ -9,14 +9,9 @@ namespace AuroraLoader
 {
     static class Program
     {
-        public static readonly string[] AURORA_MIRRORS =
+        public static readonly string[] MIRRORS =
         {
-            "https://raw.githubusercontent.com/Aurora-Modders/AuroraMods/master/Aurora/"
-        };
-
-        public static readonly string[] MOD_MIRRORS =
-        {
-            "https://raw.githubusercontent.com/Aurora-Modders/AuroraMods/master/Mods/"
+            "https://raw.githubusercontent.com/Aurora-Modders/AuroraMods/master/"
         };
 
         /// <summary>

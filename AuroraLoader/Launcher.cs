@@ -18,12 +18,12 @@ namespace AuroraLoader
                 {
                     Debug.WriteLine("Root Utility: " + mod.Name);
                     CopyToRoot(mod);
-                    Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, mod.Exe));
+                    Run(AppDomain.CurrentDomain.BaseDirectory, mod.Exe);
                 }
                 else if (mod.Type == Mod.ModType.UTILITY)
                 {
                     Debug.WriteLine("Utility: " + mod.Name);
-                    Process.Start(Path.Combine(Path.GetDirectoryName(mod.DefFile), mod.Exe));
+                    Run(Path.GetDirectoryName(mod.DefFile), mod.Exe);
                 }
                 else if (mod.Type == Mod.ModType.DATABASE)
                 {
@@ -39,13 +39,13 @@ namespace AuroraLoader
             if (exe.Name.Equals("Base Game"))
             {
                 Debug.WriteLine("Exe: " + exe.Name);
-                Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Aurora.exe"));
+                Run(AppDomain.CurrentDomain.BaseDirectory, "Aurora.exe");
             }
             else
             {
                 Debug.WriteLine("Exe: " + exe.Name);
                 CopyToRoot(exe);
-                Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, exe.Exe));
+                Run(AppDomain.CurrentDomain.BaseDirectory, exe.Exe);
             }
         }
 
@@ -57,6 +57,25 @@ namespace AuroraLoader
             {
                 File.Copy(file, Path.Combine(out_dir, Path.GetFileName(file)), true);
             }
+        }
+
+        private static void Run(string folder, string command)
+        {
+            var java = Environment.GetEnvironmentVariable("PROGRAMFILES(X86)") + @"\Common Files\Oracle\Java\javapath";
+
+            Debug.WriteLine("Running: " + command);
+            var info = new ProcessStartInfo()
+            {
+                WorkingDirectory = folder,
+                FileName = "cmd.exe", 
+                Arguments = "/c " + command,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            info.EnvironmentVariables["PATH"] = java + ";" + Environment.GetEnvironmentVariable("PATH");
+
+            Debug.WriteLine(Environment.GetEnvironmentVariable("PROGRAMFILES(X86)"));
+            Process.Start(info);
         }
     }
 }

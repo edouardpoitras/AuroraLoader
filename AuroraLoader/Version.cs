@@ -47,9 +47,9 @@ namespace AuroraLoader
             {
                 using (var client = new WebClient())
                 {
-                    foreach (var mirror in Program.AURORA_MIRRORS)
+                    foreach (var mirror in Program.MIRRORS)
                     {
-                        configs.Add(client.DownloadString(mirror + "aurora_versions.txt"));
+                        configs.Add(client.DownloadString(mirror + "Aurora/aurora_versions.txt"));
                     }
                 }
             }

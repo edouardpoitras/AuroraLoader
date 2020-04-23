@@ -101,9 +101,9 @@ namespace AuroraLoader
 
                 using (var client = new WebClient())
                 {
-                    foreach (var mirror in Program.MOD_MIRRORS)
+                    foreach (var mirror in Program.MIRRORS)
                     {
-                        mods = Config.FromString(client.DownloadString(mirror + "mods.txt"));
+                        mods = Config.FromString(client.DownloadString(mirror + "Mods/mods.txt"));
                         foreach (var kvp in mods)
                         {
                             if (!installed.Contains(kvp.Key))

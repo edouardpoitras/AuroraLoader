@@ -16,7 +16,7 @@ namespace AuroraLoader
 {
     public partial class Form1 : Form
     {
-        private string Version { get; set; } = null;
+        private Version AuroraVersion { get; set; } = null;
         private readonly List<Mod> Mods = new List<Mod>();
 
         public Form1()
@@ -32,6 +32,7 @@ namespace AuroraLoader
                 if (result == DialogResult.OK)
                 {
                     GroupMods.Enabled = true;
+                    ButtonInstallMods.Enabled = true;
                     ButtonUpdateMods.Enabled = true;
                     ButtonBugs.Enabled = false;
                 }
@@ -43,6 +44,7 @@ namespace AuroraLoader
             else
             {
                 GroupMods.Enabled = false;
+                ButtonInstallMods.Enabled = false;
                 ButtonUpdateMods.Enabled = false;
                 ButtonBugs.Enabled = true;
             }
@@ -161,27 +163,24 @@ namespace AuroraLoader
 
         private void LoadVersion()
         {
-            var checksum = Versions.GetAuroraChecksum();
+            var checksum = Version.GetAuroraChecksum();
             LabelChecksum.Text = "Aurora checksum: " + checksum;
 
-            Version = Versions.GetAuroraVersion(out string highest);
-            if (Version == null)
+            AuroraVersion = Version.GetAuroraVersion(out Version highest);
+            LabelVersion.Text = "Aurora version: " + AuroraVersion;
+            if (AuroraVersion == null)
             {
-                Version = "Unknown";
+                LabelVersion.Text = "Aurora version: Unknown";
                 CheckMods.Enabled = false;
             }
 
-            if (highest.Equals("0.0.0"))
+            if (highest != null)
             {
-                highest = "Unknown";
-            }
-
-            LabelVersion.Text = "Aurora version: " + Version;
-
-            if (!Version.Equals(highest))
-            {
-                ButtonUpdates.Text = "Check for updates: " + highest;
-                ButtonUpdates.ForeColor = Color.Green;
+                if (!highest.Equals(AuroraVersion))
+                {
+                    ButtonUpdates.Text = "Check for updates: " + highest;
+                    ButtonUpdates.ForeColor = Color.Green;
+                }
             }
         }
 
@@ -194,13 +193,13 @@ namespace AuroraLoader
 
             foreach (var mod in mods)
             {
-                if (mod.WorksForVersion(Version))
+                if (mod.WorksForVersion(AuroraVersion))
                 {
                     if (!latest.ContainsKey(mod.Name))
                     {
                         latest.Add(mod.Name, mod);
                     }
-                    else if (Versions.IsHigher(mod.Version, latest[mod.Name].Version))
+                    else if (mod.Version.IsHigher(latest[mod.Name].Version))
                     {
                         latest[mod.Name] = mod;
                     }
@@ -208,25 +207,6 @@ namespace AuroraLoader
             }
 
             Mods.AddRange(latest.Values);
-        }
-
-        private string ApplyExeMod(Mod mod)
-        {
-            if (mod.Name.Equals("Base Game"))
-            {
-                return "Aurora.exe";
-            }
-            else
-            {
-                var dir = Path.GetDirectoryName(mod.DefFile);
-                var out_dir = AppDomain.CurrentDomain.BaseDirectory;
-                foreach (var file in Directory.EnumerateFiles(dir, "*.*", SearchOption.AllDirectories).Where(f => !f.EndsWith("mod.ini")))
-                {
-                    File.Copy(file, Path.Combine(out_dir, Path.GetFileName(file)), true);
-                }
-
-                return mod.Exe;
-            }    
         }
 
         private void CheckApproved_CheckedChanged(object sender, EventArgs e)
@@ -286,7 +266,14 @@ namespace AuroraLoader
                 foreach (var kvp in urls)
                 {
                     Debug.WriteLine("Updating: " + kvp.Key.Name + " at " + kvp.Value);
-                    Updater.Update(kvp.Key, kvp.Value);
+                    try
+                    {
+                        Updater.Update(kvp.Value);
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Failed to update " + kvp.Key.Name);
+                    }
                 }
 
                 Cursor = Cursors.Default;
@@ -341,6 +328,12 @@ namespace AuroraLoader
             {
                 ButtonConfigureSelected.Enabled = true;
             }
+        }
+
+        private void ButtonInstallMods_Click(object sender, EventArgs e)
+        {
+            var form = new FormInstallMod();
+            form.ShowDialog();
         }
     }
 }

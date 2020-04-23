@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 
 namespace AuroraLoader
 {
-    public static class Versions
+    public class Version : IComparable<Version>, IEquatable<Version>
     {
         private static readonly string[] MIRRORS =
         {
             "https://raw.githubusercontent.com/Aurora-Modders/AuroraMods/master/Aurora/aurora_versions.txt",
         };
 
-        public static string GetAuroraVersion(out string highest)
+        public static Version GetAuroraVersion(out Version highest)
         {
-            string version = null;
-            highest = "0.0.0";
+            Version version = null;
+            highest = null;
 
             var checksum = GetAuroraChecksum();
             var versions = GetKnownVersions();
@@ -39,9 +39,9 @@ namespace AuroraLoader
             return version;
         }
 
-        public static Dictionary<string, string> GetKnownVersions()
+        public static Dictionary<Version, string> GetKnownVersions()
         {
-            var versions = new Dictionary<string, string>();
+            var versions = new Dictionary<Version, string>();
 
             var configs = new List<string>();
 
@@ -67,7 +67,7 @@ namespace AuroraLoader
             {
                 foreach (var kvp in Config.FromString(str))
                 {
-                    versions[kvp.Key] = kvp.Value;
+                    versions[new Version(kvp.Key)] = kvp.Value;
                 }
             }
 
@@ -87,15 +87,27 @@ namespace AuroraLoader
             }
         }
 
-        public static bool IsHigher(string a, string b)
+        private static bool IsHigher(Version a, Version b)
         {
             return Compare(a, b) == 1;
         }
 
-        public static int Compare(string a, string b)
+        private static int Compare(Version a, Version b)
         {
-            var pieces_a = a.Split('.');
-            var pieces_b = b.Split('.');
+            if (a == null)
+            {
+                return -1;
+            }
+            else if (b == null)
+            {
+                return 1;
+            }
+
+            var str_a = a.String;
+            var str_b = b.String;
+
+            var pieces_a = str_a.Split('.');
+            var pieces_b = str_b.Split('.');
 
             for (int i = 0; i < Math.Max(pieces_a.Length, pieces_b.Length); i++)
             {
@@ -124,6 +136,66 @@ namespace AuroraLoader
             }
 
             return 0;
+        }
+
+        private readonly string String;
+
+        public Version(string version)
+        {
+            if (version[0] == 65279)
+            {
+                version = version.Substring(1);
+            }
+
+            String = version;
+        }
+
+        public bool IsHigher(Version other)
+        {
+            return IsHigher(this, other);
+        }
+
+        public int CompareTo(Version other)
+        {
+            return Compare(this, other);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Version && obj != null)
+            {
+                return CompareTo(obj as Version) == 0;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override string ToString()
+        {
+            return String;
+        }
+
+        public bool Equals(Version other)
+        {
+            return other != null &&
+                   String == other.String;
+        }
+
+        public override int GetHashCode()
+        {
+            return 2096090648 + EqualityComparer<string>.Default.GetHashCode(String);
+        }
+
+        public static bool operator ==(Version left, Version right)
+        {
+            return EqualityComparer<Version>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(Version left, Version right)
+        {
+            return !(left == right);
         }
     }
 }

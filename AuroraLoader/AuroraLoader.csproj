@@ -53,14 +53,23 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormInstallMod.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormInstallMod.Designer.cs">
+      <DependentUpon>FormInstallMod.cs</DependentUpon>
+    </Compile>
     <Compile Include="Launcher.cs" />
     <Compile Include="Mod.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Updater.cs" />
-    <Compile Include="Versions.cs" />
+    <Compile Include="Version.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormInstallMod.resx">
+      <DependentUpon>FormInstallMod.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

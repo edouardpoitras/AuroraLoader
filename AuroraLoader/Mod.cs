@@ -41,8 +41,8 @@ namespace AuroraLoader
         public string DefFile { get; private set; } = null;
         public string Name { get; private set; } = null;
         public ModType Type { get; private set; } = ModType.EXE;
-        public string Version { get; private set; } = null;
-        public string AuroraVersion { get; private set; } = null;
+        public Version Version { get; private set; } = null;
+        public Version AuroraVersion { get; private set; } = null;
         public string Exe { get; private set; } = null;
         public string ConfigFile { get; private set; } = null;
         public ModStatus Status { get; private set; } = ModStatus.POWERUSER;
@@ -100,11 +100,11 @@ namespace AuroraLoader
                 }
                 else if (key.Equals("Version"))
                 {
-                    Version = val;
+                    Version = new Version(val);
                 }
                 else if (key.Equals("AuroraVersion"))
                 {
-                    AuroraVersion = val;
+                    AuroraVersion = new Version(val);
                 }
                 else if (key.Equals("Config"))
                 {
@@ -145,7 +145,7 @@ namespace AuroraLoader
             }
         }
 
-        public bool WorksForVersion(string version)
+        public bool WorksForVersion(Version version)
         {
             return (version + ".").StartsWith(AuroraVersion + ".");
         }

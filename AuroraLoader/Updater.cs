@@ -21,14 +21,14 @@ namespace AuroraLoader
                 {
                     updaters.Add(mod.Name, mod);
                 }
-                else if (Versions.IsHigher(mod.Version, updaters[mod.Name].Version))
+                else if (mod.Version.IsHigher(updaters[mod.Name].Version))
                 {
                     updaters[mod.Name] = mod;
                 }
             }
 
             var urls = new Dictionary<Mod, string>();
-            var versions = new Dictionary<Mod, string>();
+            var versions = new Dictionary<Mod, Version>();
 
             using (var client = new WebClient())
             {
@@ -41,10 +41,10 @@ namespace AuroraLoader
                         var updates = Config.FromString(client.DownloadString(mod.Updates));
                         foreach (var update in updates)
                         {
-                            var version = update.Key;
+                            var version = new Version(update.Key);
                             var url = update.Value;
 
-                            if (Versions.IsHigher(version, versions[mod]))
+                            if (version.IsHigher(versions[mod]))
                             {
                                 versions[mod] = version;
                                 urls[mod] = url;
@@ -64,7 +64,7 @@ namespace AuroraLoader
             return urls;
         }
 
-        public static void Update(Mod mod, string url)
+        public static void Update(string url)
         {
             var folder = Path.Combine(Path.GetTempPath(), "Mods");
             if (!Directory.Exists(folder))
@@ -72,37 +72,38 @@ namespace AuroraLoader
                 Directory.CreateDirectory(folder);
             }
 
-            var file = Path.Combine(folder, "update.current");
-            if (File.Exists(file))
+            var zip = Path.Combine(folder, "update.current");
+            if (File.Exists(zip))
             {
-                File.Delete(file);
+                File.Delete(zip);
             }
 
             using (var client = new WebClient())
             {
-                client.DownloadFile(url, file);
+                client.DownloadFile(url, zip);
             }
 
-            var mod_folder = Path.Combine(folder, mod.Name);
-            if (!Directory.Exists(mod_folder))
+            var extract_folder = Path.Combine(folder, "Extract");
+            if (Directory.Exists(extract_folder))
             {
-                Directory.CreateDirectory(mod_folder);
+                Directory.Delete(extract_folder, true);
             }
+            Directory.CreateDirectory(extract_folder);
 
-            ZipFile.ExtractToDirectory(file, mod_folder);
+            ZipFile.ExtractToDirectory(zip, extract_folder);
 
-            var version = Mod.GetMod(Path.Combine(mod_folder, "mod.ini")).AuroraVersion;
-            var mod_version_folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mods", mod.Name + " " + version);
+            var mod = Mod.GetMod(Path.Combine(extract_folder, "mod.ini"));
+            var mod_version_folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mods", mod.Name, mod.AuroraVersion.ToString());
             if (Directory.Exists(mod_version_folder))
             {
                 Directory.Delete(mod_version_folder, true);
             }
             Directory.CreateDirectory(mod_version_folder);
 
-            ZipFile.ExtractToDirectory(file, mod_version_folder);
+            ZipFile.ExtractToDirectory(zip, mod_version_folder);
 
-            File.Delete(file);
-            Directory.Delete(mod_folder, true);
+            File.Delete(zip);
+            Directory.Delete(extract_folder, true);
         }
     }
 }

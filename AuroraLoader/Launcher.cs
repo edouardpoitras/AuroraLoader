@@ -52,7 +52,7 @@ namespace AuroraLoader
         {
             var dir = Path.GetDirectoryName(mod.DefFile);
             var out_dir = AppDomain.CurrentDomain.BaseDirectory;
-            foreach (var file in Directory.EnumerateFiles(dir, "*.*", SearchOption.AllDirectories).Where(f => !f.EndsWith("mod.ini")))
+            foreach (var file in Directory.EnumerateFiles(dir, "*.*", SearchOption.AllDirectories).Where(f => !Path.GetFileName(f).Equals("mod.ini")))
             {
                 File.Copy(file, Path.Combine(out_dir, Path.GetFileName(file)), true);
             }

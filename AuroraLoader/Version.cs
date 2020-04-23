@@ -11,11 +11,6 @@ namespace AuroraLoader
 {
     public class Version : IComparable<Version>, IEquatable<Version>
     {
-        private static readonly string[] MIRRORS =
-        {
-            "https://raw.githubusercontent.com/Aurora-Modders/AuroraMods/master/Aurora/aurora_versions.txt",
-        };
-
         public static Version GetAuroraVersion(out Version highest)
         {
             Version version = null;
@@ -52,9 +47,9 @@ namespace AuroraLoader
             {
                 using (var client = new WebClient())
                 {
-                    foreach (var mirror in MIRRORS)
+                    foreach (var mirror in Program.AURORA_MIRRORS)
                     {
-                        configs.Add(client.DownloadString(mirror));
+                        configs.Add(client.DownloadString(mirror + "aurora_versions.txt"));
                     }
                 }
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -13,11 +14,6 @@ namespace AuroraLoader
 {
     public partial class FormInstallMod : Form
     {
-        private static readonly string[] MIRRORS =
-        {
-            "https://raw.githubusercontent.com/Aurora-Modders/AuroraMods/master/Mods/mods.txt"
-        };
-
         private readonly Dictionary<string, string> KnownMods = new Dictionary<string, string>();
 
         public FormInstallMod()
@@ -94,11 +90,20 @@ namespace AuroraLoader
 
             try
             {
+                var mods = Config.FromString(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mods", "mods.txt")));
+                foreach (var kvp in mods)
+                {
+                    if (!installed.Contains(kvp.Key))
+                    {
+                        KnownMods[kvp.Key] = kvp.Value;
+                    }
+                }
+
                 using (var client = new WebClient())
                 {
-                    foreach (var mirror in MIRRORS)
+                    foreach (var mirror in Program.MOD_MIRRORS)
                     {
-                        var mods = Config.FromString(client.DownloadString(mirror));
+                        mods = Config.FromString(client.DownloadString(mirror + "mods.txt"));
                         foreach (var kvp in mods)
                         {
                             if (!installed.Contains(kvp.Key))

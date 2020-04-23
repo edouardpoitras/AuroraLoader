@@ -20,6 +20,9 @@ namespace AuroraLoader
 
         private void ButtonOk_Click(object sender, EventArgs e)
         {
+            ButtonOk.Enabled = false;
+            ButtonCancel.Enabled = false;
+
             try
             {
                 var url = "";
@@ -42,7 +45,7 @@ namespace AuroraLoader
 
                 if (!"".Equals(url))
                 {
-                    Updater.Update(TextUrl.Text);
+                    Updater.Update(url);
                     MessageBox.Show("Mod installed");
                 }
             }
@@ -50,6 +53,9 @@ namespace AuroraLoader
             {
                 MessageBox.Show("Failed to install mod");
             }
+
+            ButtonOk.Enabled = true;
+            ButtonCancel.Enabled = true;
         }
 
         private void ButtonCancel_Click(object sender, EventArgs e)

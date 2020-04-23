@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -66,6 +67,7 @@ namespace AuroraLoader
 
         public static void Update(string url)
         {
+            Debug.WriteLine("Updating from: " + url);
             var folder = Path.Combine(Path.GetTempPath(), "Mods");
             if (!Directory.Exists(folder))
             {

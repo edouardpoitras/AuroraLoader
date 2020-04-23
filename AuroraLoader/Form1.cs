@@ -334,6 +334,8 @@ namespace AuroraLoader
         {
             var form = new FormInstallMod();
             form.ShowDialog();
+
+            UpdateLists();
         }
     }
 }

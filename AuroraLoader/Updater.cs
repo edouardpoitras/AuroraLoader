@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Semver;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AuroraLoader
 {
@@ -22,14 +21,14 @@ namespace AuroraLoader
                 {
                     updaters.Add(mod.Name, mod);
                 }
-                else if (mod.Version.IsHigher(updaters[mod.Name].Version))
-                {
-                    updaters[mod.Name] = mod;
-                }
+                //else if (mod.Version.IsHigher(updaters[mod.Name].Version))
+                //{
+                //    updaters[mod.Name] = mod;
+                //}
             }
 
             var urls = new Dictionary<Mod, string>();
-            var versions = new Dictionary<Mod, Version>();
+            var versions = new Dictionary<Mod, SemVersion>();
 
             using (var client = new WebClient())
             {
@@ -42,10 +41,10 @@ namespace AuroraLoader
                         var updates = Config.FromString(client.DownloadString(mod.Updates));
                         foreach (var update in updates)
                         {
-                            var version = new Version(update.Key);
+                            var version = SemVersion.Parse(update.Key);
                             var url = update.Value;
 
-                            if (version.IsHigher(versions[mod]))
+                            if (version.CompareTo(versions[mod]) > 0)
                             {
                                 versions[mod] = version;
                                 urls[mod] = url;

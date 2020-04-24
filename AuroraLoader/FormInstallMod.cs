@@ -1,14 +1,11 @@
-﻿using System;
+﻿using Semver;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AuroraLoader
@@ -43,17 +40,17 @@ namespace AuroraLoader
                 using (var client = new WebClient())
                 {
                     var updates = Config.FromString(client.DownloadString(update));
-                    var highest = new Version("0.0.0");
+                    var highest = SemVersion.Parse("0.0.0");
 
-                    foreach (var kvp in updates)
-                    {
-                        var version = new Version(kvp.Key);
-                        if (version.IsHigher(highest))
-                        {
-                            highest = version;
-                            url = kvp.Value;
-                        }
-                    }
+                    //foreach (var kvp in updates)
+                    //{
+                    //    var version = new Version(kvp.Key);
+                    //    if (version.IsHigher(highest))
+                    //    {
+                    //        highest = version;
+                    //        url = kvp.Value;
+                    //    }
+                    //}
 
                 }
 

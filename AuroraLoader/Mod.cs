@@ -1,10 +1,7 @@
-﻿using System;
+﻿using Semver;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AuroraLoader
 {
@@ -13,17 +10,16 @@ namespace AuroraLoader
         public enum ModType { EXE, DATABASE, UTILITY, ROOT_UTILITY }
         public enum ModStatus { POWERUSER, PUBLIC, APPROVED }
 
-        public static Mod BaseGame { get { return new Mod() { Name = "Base Game" }; } }
+        public static Mod BaseGame => new Mod() { Name = "Base Game" };
 
-        public static List<Mod> GetInstalledMods()
+        public static IList<Mod> GetInstalledMods()
         {
             var mods = new List<Mod>();
 
             var dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mods");
             foreach (var file in Directory.EnumerateFiles(dir, "mod.ini", SearchOption.AllDirectories))
             {
-                var mod = GetMod(file);
-                mods.Add(mod);
+                mods.Add(GetMod(file));
             }
 
             return mods;
@@ -41,8 +37,8 @@ namespace AuroraLoader
         public string DefFile { get; private set; } = null;
         public string Name { get; private set; } = null;
         public ModType Type { get; private set; } = ModType.EXE;
-        public Version Version { get; private set; } = null;
-        public Version AuroraVersion { get; private set; } = null;
+        public SemVersion Version { get; private set; } = null;
+        public SemVersion AuroraVersion { get; private set; } = null;
         public string Exe { get; private set; } = null;
         public string ConfigFile { get; private set; } = null;
         public ModStatus Status { get; private set; } = ModStatus.POWERUSER;
@@ -100,11 +96,11 @@ namespace AuroraLoader
                 }
                 else if (key.Equals("Version"))
                 {
-                    Version = new Version(val);
+                    Version = SemVersion.Parse(val);
                 }
                 else if (key.Equals("AuroraVersion"))
                 {
-                    AuroraVersion = new Version(val);
+                    AuroraVersion = SemVersion.Parse(val);
                 }
                 else if (key.Equals("Config"))
                 {
@@ -168,7 +164,7 @@ namespace AuroraLoader
 
         public override string ToString()
         {
-            return Name + " " + Version;
+            return $"{Name} {Version}";
         }
     }
 }

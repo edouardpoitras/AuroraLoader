@@ -1,4 +1,5 @@
-﻿using NAudio.Wave;
+﻿using Microsoft.Extensions.Configuration;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,21 +17,23 @@ namespace AuroraLoader
         private Version AuroraVersion { get; set; } = null;
         private readonly List<Mod> Mods = new List<Mod>();
         private readonly Dictionary<Mod, string> ModUpdates = new Dictionary<Mod, string>();
+        
+        private readonly IConfiguration _configuration;
+        private readonly GameInstallation _gameInstallation;
 
         private Thread AuroraThread { get; set; } = null;
 
-        public FormMain()
+        public FormMain(IConfiguration configuration)
         {
             InitializeComponent();
+            _configuration = configuration;
+            _gameInstallation = new GameInstallation(configuration);
         }
 
         private void LoadVersion()
         {
-            var checksum = Version.GetAuroraChecksum();
-            LabelChecksum.Text = "Aurora checksum: " + checksum;
-
-            AuroraVersion = Version.GetAuroraVersion(out Version highest);
-            LabelVersion.Text = "Aurora version: " + AuroraVersion;
+            LabelChecksum.Text = $"Aurora checksum: {_gameInstallation.InstalledVersion.Checksum}";
+            LabelVersion.Text = $"Aurora version: {_gameInstallation.InstalledVersion.GameVersion}";
             if (AuroraVersion == null)
             {
                 LabelVersion.Text = "Aurora version: Unknown";
@@ -41,15 +44,15 @@ namespace AuroraLoader
             ButtonUpdateAurora.ForeColor = Color.Black;
             ButtonUpdateAurora.Enabled = false;
 
-            if (highest != null)
-            {
-                if (!highest.Equals(AuroraVersion))
-                {
-                    ButtonUpdateAurora.Text = "Update Aurora: " + highest;
-                    ButtonUpdateAurora.ForeColor = Color.Green;
-                    ButtonUpdateAurora.Enabled = true;
-                }
-            }
+            //if (highest != null)
+            //{
+            //    if (!highest.Equals(AuroraVersion))
+            //    {
+            //        ButtonUpdateAurora.Text = "Update Aurora: " + highest;
+            //        ButtonUpdateAurora.ForeColor = Color.Green;
+            //        ButtonUpdateAurora.Enabled = true;
+            //    }
+            //}
         }
 
         private void LoadMods()
@@ -68,10 +71,10 @@ namespace AuroraLoader
                     {
                         latest.Add(mod.Name, mod);
                     }
-                    else if (mod.Version.IsHigher(latest[mod.Name].Version))
-                    {
-                        latest[mod.Name] = mod;
-                    }
+                    //else if (mod.Version.IsHigher(latest[mod.Name].Version))
+                    //{
+                    //    latest[mod.Name] = mod;
+                    //}
                 }
             }
 
@@ -381,7 +384,7 @@ namespace AuroraLoader
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-            Icon = Properties.Resources.Aurora;
+            //Icon = Properties.Resources.Aurora;
             MessageBox.Show("AuroraLoader will check for updates and then launch, this might take a moment.");
             Cursor = Cursors.WaitCursor;
 

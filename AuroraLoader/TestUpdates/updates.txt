@@ -1,2 +1,0 @@
-﻿; this updates.txt is deprecated, please update to https://raw.githubusercontent.com/Aurora-Modders/AuroraMods/master/Mods/AuroraMod/updates.txt
-1.8.0.2=https://raw.githubusercontent.com/Aurora-Modders/AuroraMods/master/Mods/AuroraMod/AuroraMod-1.8.0.2.zip

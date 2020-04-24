@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 
 namespace AuroraLoader
@@ -20,10 +20,14 @@ namespace AuroraLoader
         [STAThread]
         static void Main()
         {
-            Debug.WriteLine("checksum: " + Version.GetAuroraChecksum());
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormMain());
+
+            var configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile(path: "appsettings.json", optional: false, reloadOnChange: true)
+                    .Build();
+            Application.Run(new FormMain(configuration));
         }
     }
 }

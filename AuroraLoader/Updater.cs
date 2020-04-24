@@ -12,11 +12,11 @@ namespace AuroraLoader
 {
     static class Updater
     {
-        public static Dictionary<Mod, string> GetUpdateUrls()
+        public static Dictionary<Mod, string> GetUpdateUrls(List<Mod> mods)
         {
             var updaters = new Dictionary<string, Mod>();
             
-            foreach (var mod in Mod.GetInstalledMods().Where(m => m.Updates != null))
+            foreach (var mod in mods.Where(m => m.Updates != null))
             {
                 if (!updaters.ContainsKey(mod.Name))
                 {

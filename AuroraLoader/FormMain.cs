@@ -18,6 +18,7 @@ namespace AuroraLoader
     {
         private Version AuroraVersion { get; set; } = null;
         private readonly List<Mod> Mods = new List<Mod>();
+        private readonly Dictionary<Mod, string> ModUpdates = new Dictionary<Mod, string>();
 
         public FormMain()
         {
@@ -32,9 +33,10 @@ namespace AuroraLoader
                 if (result == DialogResult.OK)
                 {
                     GroupMods.Enabled = true;
-                    ButtonInstallMods.Enabled = true;
-                    ButtonUpdateMods.Enabled = true;
-                    ButtonBugs.Enabled = false;
+                    ButtonAuroraBugs.Enabled = false;
+                    ButtonAuroraBugs.ForeColor = Color.Black;
+                    ButtonModBugs.Enabled = true;
+                    ButtonModBugs.ForeColor = Color.OrangeRed;
                 }
                 else
                 {
@@ -44,23 +46,32 @@ namespace AuroraLoader
             else
             {
                 GroupMods.Enabled = false;
-                ButtonInstallMods.Enabled = false;
-                ButtonUpdateMods.Enabled = false;
-                ButtonBugs.Enabled = true;
+                ButtonAuroraBugs.Enabled = true;
+                ButtonAuroraBugs.ForeColor = Color.OrangeRed;
+                ButtonModBugs.Enabled = false;
+                ButtonModBugs.ForeColor = Color.Black;
             }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            MessageBox.Show("AuroraLoader will check for Aurora updates and then launch");
+            Cursor = Cursors.WaitCursor;
+
             LoadVersion();
             LoadMods();
             UpdateLists();
+
+            Cursor = Cursors.Default;
+            TabThemeMods.Enabled = false;
+            TabUtilityMods.Enabled = false;
+            TabMods.SelectedTab = TabGameMods;
         }
 
         private void ButtonLaunch_Click(object sender, EventArgs e)
         {
-            ButtonLaunch.Enabled = false;
-            ButtonLaunch.Refresh();
+            ButtonSinglePlayer.Enabled = false;
+            ButtonSinglePlayer.Refresh();
 
             var exe = Mod.BaseGame;
             var others = new List<Mod>();
@@ -158,18 +169,7 @@ namespace AuroraLoader
 
             ButtonConfigureSelected.Enabled = false;
 
-            ButtonUpdateMods.ForeColor = Color.Black;
-            try
-            {
-                if (Updater.GetUpdateUrls().Count > 0)
-                {
-                    ButtonUpdateMods.ForeColor = Color.Green;
-                }
-            }
-            catch (Exception)
-            {
-
-            }
+            
         }
 
         private void LoadVersion()
@@ -185,12 +185,17 @@ namespace AuroraLoader
                 CheckMods.Enabled = false;
             }
 
+            ButtonUpdateAurora.Text = "Update Aurora";
+            ButtonUpdateAurora.ForeColor = Color.Black;
+            ButtonUpdateAurora.Enabled = false;
+
             if (highest != null)
             {
                 if (!highest.Equals(AuroraVersion))
                 {
-                    ButtonUpdates.Text = "Check for updates: " + highest;
-                    ButtonUpdates.ForeColor = Color.Green;
+                    ButtonUpdateAurora.Text = "Update Aurora: " + highest;
+                    ButtonUpdateAurora.ForeColor = Color.Green;
+                    ButtonUpdateAurora.Enabled = true;
                 }
             }
         }
@@ -198,6 +203,7 @@ namespace AuroraLoader
         private void LoadMods()
         {
             Mods.Clear();
+            ModUpdates.Clear();
 
             var mods = Mod.GetInstalledMods();
             var latest = new Dictionary<string, Mod>();
@@ -218,6 +224,32 @@ namespace AuroraLoader
             }
 
             Mods.AddRange(latest.Values);
+
+            try
+            {
+                var urls = Updater.GetUpdateUrls(Mods);
+                foreach (var kvp in urls)
+                {
+                    ModUpdates.Add(kvp.Key, kvp.Value);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            ButtonUpdateMods.ForeColor = Color.Black;
+            try
+            {
+                if (ModUpdates.Count > 0)
+                {
+                    ButtonUpdateMods.ForeColor = Color.Green;
+                }
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         private void CheckApproved_CheckedChanged(object sender, EventArgs e)
@@ -265,7 +297,7 @@ namespace AuroraLoader
             Cursor = Cursors.WaitCursor;
             Debug.WriteLine("Start updating");
 
-            var urls = Updater.GetUpdateUrls();
+            var urls = ModUpdates;
             if (urls.Count == 0)
             {
                 Cursor = Cursors.Default;

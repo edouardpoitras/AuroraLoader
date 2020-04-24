@@ -143,6 +143,22 @@ namespace AuroraLoader
             {
                 throw new Exception("Mod name must have length at least 2");
             }
+            else if (Version == null)
+            {
+                throw new Exception("Mod must have a version");
+            }
+            else if (AuroraVersion == null)
+            {
+                throw new Exception("Mod must have an Aurora version");
+            }
+            else if (Exe == null)
+            {
+                if (Type == ModType.EXE || Type == ModType.UTILITY || Type == ModType.ROOT_UTILITY)
+                {
+                    throw new Exception("Mod of type " + Type.ToString() + " must define an Exe");
+                }
+
+            }
         }
 
         public bool WorksForVersion(Version version)

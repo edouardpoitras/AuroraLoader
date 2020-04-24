@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NAudio.Wave;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -296,25 +297,68 @@ namespace AuroraLoader
 
             var process = Launcher.Launch(exe, others);
 
-            AuroraThread = new Thread(() =>
-            {
-                process.WaitForExit();
-
-                Invoke((MethodInvoker)delegate
-                {
-                    EndGame();
-                });
-
-                lock (this)
-                {
-                    AuroraThread = null;
-                }
-            })
+            AuroraThread = new Thread(() => RunGame(process))
             {
                 IsBackground = true
             };
 
             AuroraThread.Start();
+        }
+
+        private void RunGame(Process process)
+        {
+            var songs = new List<Song>();
+            var folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Music");
+            if (Directory.Exists(folder))
+            {
+                foreach (var mp3 in Directory.EnumerateFiles(folder, "*.mp3", SearchOption.AllDirectories))
+                {
+                    songs.Add(new Song(mp3));
+                }
+            }
+            
+            var rng = new Random();
+
+            while (!process.HasExited)
+            {
+                if (CheckMusic.Checked && songs.Count > 0)
+                {
+                    var current = songs.Where(s => s.Playing).FirstOrDefault();
+
+                    if (current == null)
+                    {
+                        current = songs[rng.Next(songs.Count)];
+
+                        Debug.WriteLine("Playing song: " + Path.GetFileNameWithoutExtension(current.File));
+                        current.Play();
+                    }
+                    else
+                    {
+                        Invoke((MethodInvoker)delegate
+                        {
+                            current.Volume = TrackVolume.Value / 10d;
+                        });
+                    }
+                }
+                else
+                {
+                    foreach (var song in songs)
+                    {
+                        song.Stop();
+                    }
+                }
+                Thread.Sleep(1000);
+            }
+
+            Invoke((MethodInvoker)delegate
+            {
+                EndGame();
+            });
+
+            lock (this)
+            {
+                AuroraThread = null;
+            }
         }
 
         private void EndGame()
@@ -337,6 +381,7 @@ namespace AuroraLoader
 
         private void FormMain_Load(object sender, EventArgs e)
         {
+            Icon = Properties.Resources.Aurora;
             MessageBox.Show("AuroraLoader will check for updates and then launch, this might take a moment.");
             Cursor = Cursors.WaitCursor;
 
@@ -494,6 +539,19 @@ namespace AuroraLoader
         {
             var selected = ListUtilityMods.SelectedItem as Mod;
             ConfigureMod(selected);
+        }
+
+        private void CheckMusic_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CheckMusic.Checked)
+            {
+                TrackVolume.Value = 5;
+                TrackVolume.Enabled = true;
+            }
+            else
+            {
+                TrackVolume.Enabled = false;
+            }
         }
     }
 }

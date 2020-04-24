@@ -57,10 +57,13 @@
             this.ButtonMultiPlayer = new System.Windows.Forms.Button();
             this.ButtonInstallAurora = new System.Windows.Forms.Button();
             this.ButtonModBugs = new System.Windows.Forms.Button();
+            this.TrackVolume = new System.Windows.Forms.TrackBar();
+            this.CheckMusic = new System.Windows.Forms.CheckBox();
             this.GroupMods.SuspendLayout();
             this.TabMods.SuspendLayout();
             this.TabUtilityMods.SuspendLayout();
             this.TabGameMods.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TrackVolume)).BeginInit();
             this.SuspendLayout();
             // 
             // GroupMods
@@ -229,7 +232,7 @@
             // ButtonAuroraForums
             // 
             this.ButtonAuroraForums.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonAuroraForums.Location = new System.Drawing.Point(12, 278);
+            this.ButtonAuroraForums.Location = new System.Drawing.Point(12, 367);
             this.ButtonAuroraForums.Name = "ButtonAuroraForums";
             this.ButtonAuroraForums.Size = new System.Drawing.Size(224, 46);
             this.ButtonAuroraForums.TabIndex = 9;
@@ -241,7 +244,7 @@
             // 
             this.ButtonAuroraBugs.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonAuroraBugs.ForeColor = System.Drawing.Color.OrangeRed;
-            this.ButtonAuroraBugs.Location = new System.Drawing.Point(12, 330);
+            this.ButtonAuroraBugs.Location = new System.Drawing.Point(12, 419);
             this.ButtonAuroraBugs.Name = "ButtonAuroraBugs";
             this.ButtonAuroraBugs.Size = new System.Drawing.Size(224, 46);
             this.ButtonAuroraBugs.TabIndex = 11;
@@ -252,7 +255,7 @@
             // ButtonUpdateAurora
             // 
             this.ButtonUpdateAurora.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonUpdateAurora.Location = new System.Drawing.Point(12, 226);
+            this.ButtonUpdateAurora.Location = new System.Drawing.Point(12, 315);
             this.ButtonUpdateAurora.Name = "ButtonUpdateAurora";
             this.ButtonUpdateAurora.Size = new System.Drawing.Size(224, 46);
             this.ButtonUpdateAurora.TabIndex = 12;
@@ -263,7 +266,7 @@
             // ButtonModSubreddit
             // 
             this.ButtonModSubreddit.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonModSubreddit.Location = new System.Drawing.Point(242, 278);
+            this.ButtonModSubreddit.Location = new System.Drawing.Point(242, 367);
             this.ButtonModSubreddit.Name = "ButtonModSubreddit";
             this.ButtonModSubreddit.Size = new System.Drawing.Size(224, 46);
             this.ButtonModSubreddit.TabIndex = 13;
@@ -274,7 +277,7 @@
             // ButtonUpdateMods
             // 
             this.ButtonUpdateMods.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonUpdateMods.Location = new System.Drawing.Point(242, 226);
+            this.ButtonUpdateMods.Location = new System.Drawing.Point(242, 315);
             this.ButtonUpdateMods.Name = "ButtonUpdateMods";
             this.ButtonUpdateMods.Size = new System.Drawing.Size(224, 46);
             this.ButtonUpdateMods.TabIndex = 14;
@@ -285,7 +288,7 @@
             // ButtonInstallMods
             // 
             this.ButtonInstallMods.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonInstallMods.Location = new System.Drawing.Point(242, 174);
+            this.ButtonInstallMods.Location = new System.Drawing.Point(242, 263);
             this.ButtonInstallMods.Name = "ButtonInstallMods";
             this.ButtonInstallMods.Size = new System.Drawing.Size(224, 46);
             this.ButtonInstallMods.TabIndex = 15;
@@ -375,7 +378,7 @@
             // 
             this.ButtonInstallAurora.Enabled = false;
             this.ButtonInstallAurora.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonInstallAurora.Location = new System.Drawing.Point(12, 174);
+            this.ButtonInstallAurora.Location = new System.Drawing.Point(12, 263);
             this.ButtonInstallAurora.Name = "ButtonInstallAurora";
             this.ButtonInstallAurora.Size = new System.Drawing.Size(224, 46);
             this.ButtonInstallAurora.TabIndex = 18;
@@ -386,7 +389,7 @@
             // 
             this.ButtonModBugs.Enabled = false;
             this.ButtonModBugs.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonModBugs.Location = new System.Drawing.Point(242, 330);
+            this.ButtonModBugs.Location = new System.Drawing.Point(242, 419);
             this.ButtonModBugs.Name = "ButtonModBugs";
             this.ButtonModBugs.Size = new System.Drawing.Size(224, 46);
             this.ButtonModBugs.TabIndex = 19;
@@ -394,11 +397,34 @@
             this.ButtonModBugs.UseVisualStyleBackColor = true;
             this.ButtonModBugs.Click += new System.EventHandler(this.ButtonModBugs_Click);
             // 
+            // TrackVolume
+            // 
+            this.TrackVolume.Enabled = false;
+            this.TrackVolume.LargeChange = 1;
+            this.TrackVolume.Location = new System.Drawing.Point(97, 167);
+            this.TrackVolume.Name = "TrackVolume";
+            this.TrackVolume.Size = new System.Drawing.Size(139, 45);
+            this.TrackVolume.TabIndex = 20;
+            // 
+            // CheckMusic
+            // 
+            this.CheckMusic.AutoSize = true;
+            this.CheckMusic.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckMusic.Location = new System.Drawing.Point(12, 167);
+            this.CheckMusic.Name = "CheckMusic";
+            this.CheckMusic.Size = new System.Drawing.Size(79, 28);
+            this.CheckMusic.TabIndex = 2;
+            this.CheckMusic.Text = "Music";
+            this.CheckMusic.UseVisualStyleBackColor = true;
+            this.CheckMusic.CheckedChanged += new System.EventHandler(this.CheckMusic_CheckedChanged);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(981, 566);
+            this.Controls.Add(this.CheckMusic);
+            this.Controls.Add(this.TrackVolume);
             this.Controls.Add(this.ButtonModBugs);
             this.Controls.Add(this.ButtonInstallAurora);
             this.Controls.Add(this.ButtonUpdateMods);
@@ -422,6 +448,7 @@
             this.TabUtilityMods.ResumeLayout(false);
             this.TabGameMods.ResumeLayout(false);
             this.TabGameMods.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TrackVolume)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -458,6 +485,8 @@
         private System.Windows.Forms.Button ButtonModBugs;
         private System.Windows.Forms.CheckedListBox ListUtilityMods;
         private System.Windows.Forms.Button ButtonConfigureUtility;
+        private System.Windows.Forms.TrackBar TrackVolume;
+        private System.Windows.Forms.CheckBox CheckMusic;
     }
 }
 

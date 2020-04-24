@@ -1,6 +1,7 @@
 ﻿using Semver;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace AuroraLoader
@@ -38,11 +39,30 @@ namespace AuroraLoader
         public string Name { get; private set; } = null;
         public ModType Type { get; private set; } = ModType.EXE;
         public SemVersion Version { get; private set; } = null;
-        public SemVersion AuroraVersion { get; private set; } = null;
+        public int AuroraMajor { get; private set; } = -1;
+        public int AuroraMinor { get; private set; } = -1;
+        public int AuroraPatch { get; private set; } = -1;
         public string Exe { get; private set; } = null;
         public string ConfigFile { get; private set; } = null;
         public ModStatus Status { get; private set; } = ModStatus.POWERUSER;
         public string Updates { get; private set; } = null;
+        public string AuroraVersion
+        {
+            get
+            {
+                var str = AuroraMajor.ToString();
+                if (AuroraMinor != -1)
+                {
+                    str += "." + AuroraMinor;
+                }
+                if (AuroraPatch != -1)
+                {
+                    str += "." + AuroraPatch;
+                }
+
+                return str;
+            }
+        }
 
         public void SetConfig(string config)
         {
@@ -100,7 +120,19 @@ namespace AuroraLoader
                 }
                 else if (key.Equals("AuroraVersion"))
                 {
-                    AuroraVersion = SemVersion.Parse(val);
+                    var pieces = val.Split('.');
+                    if (pieces.Length > 0)
+                    {
+                        AuroraMajor = int.Parse(pieces[0]);
+                    }
+                    if (pieces.Length > 1)
+                    {
+                        AuroraMinor = int.Parse(pieces[1]);
+                    }
+                    if (pieces.Length > 2)
+                    {
+                        AuroraPatch = int.Parse(pieces[2]);
+                    }
                 }
                 else if (key.Equals("Config"))
                 {
@@ -143,7 +175,7 @@ namespace AuroraLoader
             {
                 throw new Exception("Mod must have a version");
             }
-            else if (AuroraVersion == null)
+            else if (AuroraMajor == -1)
             {
                 throw new Exception("Mod must have an Aurora version");
             }
@@ -157,9 +189,24 @@ namespace AuroraLoader
             }
         }
 
-        public bool WorksForVersion(Version version)
+        public bool WorksForVersion(GameVersion version)
         {
-            return (version + ".").StartsWith(AuroraVersion + ".");
+            if (AuroraMajor != -1 && version.Version.Major != AuroraMajor)
+            {
+                return false;
+            }
+            else if (AuroraMinor != -1 && version.Version.Minor != AuroraMinor)
+            {
+                return false;
+            }
+            else if (AuroraPatch != -1 && version.Version.Patch != AuroraPatch)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         public override string ToString()

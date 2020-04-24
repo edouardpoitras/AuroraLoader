@@ -3,25 +3,25 @@ using System;
 
 namespace AuroraLoader
 {
-    public class Version : IComparable<Version>
+    public class GameVersion : IComparable<GameVersion>
     {
-        public SemVersion GameVersion { get; }
+        public SemVersion Version { get; }
         public string Checksum { get; }
 
-        public Version(string version, string checksum)
+        public GameVersion(string version, string checksum)
         {
             if (version[0] == 65279)
             {
                 version = version.Substring(1);
             }
 
-            GameVersion = version;
+            Version = version;
             Checksum = checksum;
         }
 
-        public int CompareTo(Version other)
+        public int CompareTo(GameVersion other)
         {
-            return GameVersion.CompareTo(other);
+            return Version.CompareTo(other);
         }
     }
 }

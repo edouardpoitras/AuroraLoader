@@ -42,16 +42,17 @@ namespace AuroraLoader
                     var updates = Config.FromString(client.DownloadString(update));
                     var highest = SemVersion.Parse("0.0.0");
 
-                    //foreach (var kvp in updates)
-                    //{
-                    //    var version = new Version(kvp.Key);
-                    //    if (version.IsHigher(highest))
-                    //    {
-                    //        highest = version;
-                    //        url = kvp.Value;
-                    //    }
-                    //}
-
+                    foreach (var kvp in updates)
+                    {
+                        if (SemVersion.TryParse(kvp.Key, out SemVersion version, false))
+                        {
+                            if (version.CompareByPrecedence(highest) == 1)
+                            {
+                                highest = version;
+                                url = kvp.Value;
+                            }
+                        }
+                    }
                 }
 
                 if (!"".Equals(url))

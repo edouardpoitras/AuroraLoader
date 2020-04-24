@@ -9,9 +9,9 @@ namespace AuroraLoader
 {
     public class GameInstallation
     {
-        public Version InstalledVersion { get; }
+        public GameVersion InstalledVersion { get; }
 
-        public IEnumerable<Version> KnownVersions { get; }
+        public IEnumerable<GameVersion> KnownVersions { get; }
         public string ExecutableLocation { get; }
 
         private readonly IConfiguration _configuration;
@@ -25,7 +25,7 @@ namespace AuroraLoader
             var installedChecksum = GetAuroraChecksum();
             KnownVersions = _configuration.GetSection("known_version_checksums")
                                           .Get<Dictionary<string, string>>()
-                                          .Select(entry => new Version(entry.Key, entry.Value));
+                                          .Select(entry => new GameVersion(entry.Key, entry.Value));
             InstalledVersion = KnownVersions.Single(version => version.Checksum == installedChecksum);
         }
 

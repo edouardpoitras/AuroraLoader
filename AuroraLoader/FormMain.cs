@@ -14,7 +14,7 @@ namespace AuroraLoader
 {
     public partial class FormMain : Form
     {
-        private Version AuroraVersion { get; set; } = null;
+        private GameVersion AuroraVersion => _gameInstallation.InstalledVersion;
         private readonly List<Mod> Mods = new List<Mod>();
         private readonly Dictionary<Mod, string> ModUpdates = new Dictionary<Mod, string>();
         
@@ -33,7 +33,7 @@ namespace AuroraLoader
         private void LoadVersion()
         {
             LabelChecksum.Text = $"Aurora checksum: {_gameInstallation.InstalledVersion.Checksum}";
-            LabelVersion.Text = $"Aurora version: {_gameInstallation.InstalledVersion.GameVersion}";
+            LabelVersion.Text = $"Aurora version: {_gameInstallation.InstalledVersion.Version}";
             if (AuroraVersion == null)
             {
                 LabelVersion.Text = "Aurora version: Unknown";
@@ -71,10 +71,10 @@ namespace AuroraLoader
                     {
                         latest.Add(mod.Name, mod);
                     }
-                    //else if (mod.Version.IsHigher(latest[mod.Name].Version))
-                    //{
-                    //    latest[mod.Name] = mod;
-                    //}
+                    else if (mod.Version.CompareByPrecedence(latest[mod.Name].Version) == 1)
+                    {
+                        latest[mod.Name] = mod;
+                    }
                 }
             }
 
@@ -287,15 +287,15 @@ namespace AuroraLoader
             {
                 exe = ComboExe.SelectedItem as Mod;
 
-                for (int i = 0; i < ListUtilityMods.CheckedItems.Count; i++)
-                {
-                    others.Add(ListUtilityMods.CheckedItems[i] as Mod);
-                }
-
                 for (int i = 0; i < ListDBMods.CheckedItems.Count; i++)
                 {
                     others.Add(ListDBMods.CheckedItems[i] as Mod);
                 }
+            }
+
+            for (int i = 0; i < ListUtilityMods.CheckedItems.Count; i++)
+            {
+                others.Add(ListUtilityMods.CheckedItems[i] as Mod);
             }
 
             var process = Launcher.Launch(exe, others);

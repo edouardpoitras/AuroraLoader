@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Semver;
 using System;
 using System.Diagnostics;
 using System.IO;

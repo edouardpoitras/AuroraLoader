@@ -15,7 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="bin\Debug\netcoreapp3.1\Aurora.exe" />
+    <None Include="bin\Debug\netcoreapp3.1\aurora.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

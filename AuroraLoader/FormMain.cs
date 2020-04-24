@@ -283,6 +283,11 @@ namespace AuroraLoader
             {
                 exe = ComboExe.SelectedItem as Mod;
 
+                for (int i = 0; i < ListUtilityMods.CheckedItems.Count; i++)
+                {
+                    others.Add(ListUtilityMods.CheckedItems[i] as Mod);
+                }
+
                 for (int i = 0; i < ListDBMods.CheckedItems.Count; i++)
                 {
                     others.Add(ListDBMods.CheckedItems[i] as Mod);
@@ -317,9 +322,10 @@ namespace AuroraLoader
             MessageBox.Show("Game ended.");
             Cursor = Cursors.WaitCursor;
 
+            ButtonSinglePlayer.Enabled = true;
             ButtonInstallMods.Enabled = true;
-
-            TabThemeMods.Enabled = false;
+            TabUtilityMods.Enabled = true;
+            TabGameMods.Enabled = true;
 
             LoadVersion();
             LoadMods();
@@ -331,7 +337,7 @@ namespace AuroraLoader
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-            MessageBox.Show("AuroraLoader will check for Aurora updates and then launch");
+            MessageBox.Show("AuroraLoader will check for updates and then launch, this might take a moment.");
             Cursor = Cursors.WaitCursor;
 
             LoadVersion();
@@ -349,7 +355,7 @@ namespace AuroraLoader
         {
             if (CheckMods.Checked)
             {
-                var result = MessageBox.Show("By using mods you agree to not post bug reports to the official Aurora bug report channels.", "Warning!", MessageBoxButtons.OKCancel);
+                var result = MessageBox.Show("By using game mods you agree to not post bug reports to the official Aurora bug report channels.", "Warning!", MessageBoxButtons.OKCancel);
                 if (result != DialogResult.OK)
                 {
                     CheckMods.Checked = false;

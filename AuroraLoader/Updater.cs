@@ -21,10 +21,10 @@ namespace AuroraLoader
                 {
                     updaters.Add(mod.Name, mod);
                 }
-                //else if (mod.Version.IsHigher(updaters[mod.Name].Version))
-                //{
-                //    updaters[mod.Name] = mod;
-                //}
+                else if (mod.Version.CompareByPrecedence(updaters[mod.Name].Version) == 1)
+                {
+                    updaters[mod.Name] = mod;
+                }
             }
 
             var urls = new Dictionary<Mod, string>();
@@ -94,7 +94,7 @@ namespace AuroraLoader
             ZipFile.ExtractToDirectory(zip, extract_folder);
 
             var mod = Mod.GetMod(Path.Combine(extract_folder, "mod.ini"));
-            var mod_version_folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mods", mod.Name, mod.AuroraVersion.ToString());
+            var mod_version_folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mods", mod.Name, mod.VersionFolder.ToString());
             if (Directory.Exists(mod_version_folder))
             {
                 Directory.Delete(mod_version_folder, true);

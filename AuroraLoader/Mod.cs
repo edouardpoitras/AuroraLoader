@@ -46,7 +46,7 @@ namespace AuroraLoader
         public string ConfigFile { get; private set; } = null;
         public ModStatus Status { get; private set; } = ModStatus.POWERUSER;
         public string Updates { get; private set; } = null;
-        public string AuroraVersion
+        public string VersionFolder
         {
             get
             {

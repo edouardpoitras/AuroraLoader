@@ -255,7 +255,12 @@ namespace AuroraLoader
         private void ConfigureMod(Mod mod)
         {
             var file = Path.Combine(Path.GetDirectoryName(mod.DefFile), mod.ConfigFile);
-            Process.Start(file);
+            var info = new ProcessStartInfo()
+            {
+                FileName = file,
+                UseShellExecute = true
+            };
+            Process.Start(info);
         }
 
         private void StartGame()

@@ -63,20 +63,17 @@ namespace AuroraLoader
 
         private static Process Run(string folder, string command)
         {
-            var java = Environment.GetEnvironmentVariable("PROGRAMFILES(X86)") + @"\Common Files\Oracle\Java\javapath";
+            //var java = Environment.GetEnvironmentVariable("PROGRAMFILES(X86)") + @"\Common Files\Oracle\Java\javapath";
 
             Debug.WriteLine("Running: " + command);
             var info = new ProcessStartInfo()
             {
                 WorkingDirectory = folder,
-                FileName = "cmd.exe", 
-                Arguments = "/c " + command,
-                UseShellExecute = false,
+                FileName = command, 
+                UseShellExecute = true,
                 CreateNoWindow = true
             };
-            info.EnvironmentVariables["PATH"] = java + ";" + Environment.GetEnvironmentVariable("PATH");
-
-            Debug.WriteLine(Environment.GetEnvironmentVariable("PROGRAMFILES(X86)"));
+            //info.EnvironmentVariables["PATH"] = java + ";" + Environment.GetEnvironmentVariable("PATH");
             
             var process = Process.Start(info);
             return process;

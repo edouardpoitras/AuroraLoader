@@ -10,7 +10,7 @@ namespace AuroraLoader
 {
     static class Launcher
     {
-        public static void Launch(Mod exe, List<Mod> others)
+        public static Process Launch(Mod exe, List<Mod> others)
         {
             foreach (var mod in others)
             {
@@ -39,13 +39,17 @@ namespace AuroraLoader
             if (exe.Name.Equals("Base Game"))
             {
                 Debug.WriteLine("Exe: " + exe.Name);
-                Run(AppDomain.CurrentDomain.BaseDirectory, "Aurora.exe");
+                var process = Run(AppDomain.CurrentDomain.BaseDirectory, "Aurora.exe");
+
+                return process;
             }
             else
             {
                 Debug.WriteLine("Exe: " + exe.Name);
                 CopyToRoot(exe);
-                Run(AppDomain.CurrentDomain.BaseDirectory, exe.Exe);
+                var process = Run(AppDomain.CurrentDomain.BaseDirectory, exe.Exe);
+
+                return process;
             }
         }
 
@@ -59,7 +63,7 @@ namespace AuroraLoader
             }
         }
 
-        private static void Run(string folder, string command)
+        private static Process Run(string folder, string command)
         {
             var java = Environment.GetEnvironmentVariable("PROGRAMFILES(X86)") + @"\Common Files\Oracle\Java\javapath";
 
@@ -75,7 +79,9 @@ namespace AuroraLoader
             info.EnvironmentVariables["PATH"] = java + ";" + Environment.GetEnvironmentVariable("PATH");
 
             Debug.WriteLine(Environment.GetEnvironmentVariable("PROGRAMFILES(X86)"));
-            Process.Start(info);
+            
+            var process = Process.Start(info);
+            return process;
         }
     }
 }
